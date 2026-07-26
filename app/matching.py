@@ -32,13 +32,17 @@ def tokens(text: str) -> set[str]:
 
 def profile_terms(profile: CapabilityProfile, verified_only: bool = False) -> set[str]:
     values: list[str] = []
+    verified_evidence_ids = {item.id for item in profile.evidence if item.status.value == "verified"}
     for skill in profile.skills:
-        if not verified_only or skill.status.value == "verified":
+        is_proven = skill.status.value == "verified" and bool(verified_evidence_ids & set(skill.evidenceIds))
+        if not verified_only or is_proven:
             values.append(skill.name)
     for project in profile.projects:
-        if not verified_only or project.status.value == "verified":
+        is_proven = project.status.value == "verified" and bool(verified_evidence_ids & set(project.evidenceIds))
+        if not verified_only or is_proven:
             values.extend([project.name, project.summary, *project.ecosystems, *project.capabilities])
-    values.extend(profile.supportedEcosystems)
+    if not verified_only:
+        values.extend(profile.supportedEcosystems)
     return tokens(" ".join(values))
 
 

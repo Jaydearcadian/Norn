@@ -67,3 +67,19 @@ def test_invalid_input_does_not_execute_business(tmp_path: Path):
     client = TestClient(create_app(settings))
     response = client.post("/api/v1/opportunity-brief", content=b'{}', headers={"content-type":"application/json"})
     assert response.status_code == 422
+
+
+def test_production_okx_mode_fails_closed_without_credentials(tmp_path: Path):
+    import pytest
+    settings = Settings(
+        environment="production",
+        data_dir=tmp_path / "data",
+        public_base_url="https://norn.example",
+        payment_mode="okx",
+        pay_to_address="",
+        okx_api_key="",
+        okx_secret_key="",
+        okx_passphrase="",
+    )
+    with pytest.raises(RuntimeError):
+        create_app(settings)

@@ -27,7 +27,7 @@ def _verified_profile_lines(profile: CapabilityProfile) -> tuple[list[str], list
         linked = [evidence_by_id.get(item) for item in project.evidenceIds]
         proven = [item for item in linked if item and item.status.value == "verified"]
         if project.status.value == "verified" and proven:
-            verified_lines.append(f"- {project.name}: {project.summary} Evidence: {', '.join(item.label for item in proven)}")
+            verified_lines.append(f"- {project.name}: verified by {', '.join(item.label for item in proven)}")
             included_ids.extend(item.id for item in proven)
         else:
             excluded.append(f"Project claim not used as verified fact: {project.name}")

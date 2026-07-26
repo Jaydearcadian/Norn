@@ -26,6 +26,16 @@ class Evidence(BaseModel):
     status: ClaimStatus = ClaimStatus.claimed
     note: str = ""
 
+    @model_validator(mode="after")
+    def verified_requires_proof(self):
+        if self.digest is not None:
+            value = self.digest.removeprefix("sha256:")
+            if len(value) != 64 or any(char not in "0123456789abcdef" for char in value.lower()):
+                raise ValueError("Evidence digest must be a 64-character SHA-256 hex string")
+        if self.status == ClaimStatus.verified and not (self.url or self.digest):
+            raise ValueError("Verified evidence requires a public URL or SHA-256 digest")
+        return self
+
 
 class SkillClaim(BaseModel):
     name: str

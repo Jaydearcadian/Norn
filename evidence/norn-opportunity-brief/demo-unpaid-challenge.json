@@ -1,7 +1,7 @@
 {
   "status": 402,
   "headers": {
-    "PAYMENT-REQUIRED": "[BASE64 CHALLENGE REDACTED FROM EVIDENCE; BODY RETAINED]"
+    "PAYMENT-REQUIRED": "[BASE64 VALUE OMITTED]"
   },
   "body": {
     "x402Version": 2,

@@ -1,0 +1,7 @@
+### GET /health
+{"status":"ok","service":"norn","version":"0.1.0","paymentMode":"free","blockers":[]}
+HTTP 200
+### POST /api/feed
+{"items":[{"id":"okx-ai-genesis-2026","title":"OKX.AI Genesis Hackathon","type":"hackathon","issuer":"OKX.AI","summary":"Build and list a practical Agent Service Provider on OKX.AI, demonstrate it publicly, and submit before the campaign deadline.","value":{"minimum":1000.0,"maximum":10000.0,"currency":"USDT","note":"Award-dependent; category prizes vary."},"deadline":"2026-07-27","requirements":["A working ASP that solves a clear real-world use case","ASP approved and live on the OKX.AI marketplace","Public X post using #OKXAI","Clear demo or walkthrough no longer than 90 seconds","Final submission form containing ASP details and X post link"],"preferredCapabilities":["AI agents","MCP","agent payments","software utility"],"ecosystems":["OKX.AI","X Layer","x402"],"sourceUrl":"https://web3.okx.com/xlayer/build-x-series","sourceTimestamp":"2026-07-26T08:00:00Z","sourceType":"official","applicationEffort":"high","competitiveIntensity":"high","longTermValue":90,"status":"closing"},{"id":"demo-zk-grant","title":"ZK Infrastructure Grant — Demo Fixture","type":"grant","issuer":"Example Foundation","summary":"A clearly labelled fixture used to demonstrate Norn scoring and evidence-gap be
+### GET /
+HTTP 200 content-type=text/html; charset=utf-8

@@ -21,7 +21,9 @@ async function init(){
 
 function verifiedReadiness(){
   const claims=[...state.profile.skills,...state.profile.projects]; if(!claims.length)return 0;
-  return Math.round(claims.filter(c=>c.status==='verified').length/claims.length*100);
+  const evidenceIds=new Set(state.profile.evidence.filter(e=>e.status==='verified'&&(e.url||e.digest)).map(e=>e.id));
+  const proven=claims.filter(c=>c.status==='verified'&&(c.evidenceIds||[]).some(id=>evidenceIds.has(id)));
+  return Math.round(proven.length/claims.length*100);
 }
 function updateMetrics(){
   $('#metric-readiness').textContent=`${verifiedReadiness()}%`;

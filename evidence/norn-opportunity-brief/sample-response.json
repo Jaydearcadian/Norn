@@ -161,7 +161,7 @@
             "recommendedAction": "Create or obtain evidence for: Final submission form containing ASP details and X post link"
           }
         ],
-        "generatedAt": "2026-07-26T11:20:31.234933Z"
+        "generatedAt": "2026-07-26T11:23:18.356590Z"
       }
     },
     {
@@ -323,12 +323,12 @@
             "recommendedAction": "Create or obtain evidence for: Milestone and budget plan"
           }
         ],
-        "generatedAt": "2026-07-26T11:20:31.235198Z"
+        "generatedAt": "2026-07-26T11:23:18.356824Z"
       }
     }
   ],
   "topPack": {
-    "id": "pack_e6b282cb2fa9",
+    "id": "pack_6c1d1ce2b858",
     "opportunityId": "okx-ai-genesis-2026",
     "title": "Norn Pack \u2014 OKX.AI Genesis Hackathon",
     "content": "# Norn Pack \u2014 OKX.AI Genesis Hackathon\n\n## Submission status\n\n**Draft only. Human approval is required before submission.**\n\n## Opportunity\n\n- Issuer: OKX.AI\n- Type: hackathon\n- Deadline: 2026-07-27\n- Source: https://web3.okx.com/xlayer/build-x-series\n- Norn Score: 45/100\n- Recommendation: watch\n\n## Tailored project summary\n\nJaydearcadian is preparing an application for OKX.AI Genesis Hackathon. The application should lead with capabilities that are backed by the evidence index below and should avoid treating claimed or aspirational work as completed proof.\n\n## Verified capability evidence\n\n- No capability claim currently meets Norn's verified-evidence threshold.\n\n## Requirement and evidence matrix\n\n- [MISSING] A working ASP that solves a clear real-world use case \u2014 Create or obtain evidence for: A working ASP that solves a clear real-world use case\n- [MISSING] ASP approved and live on the OKX.AI marketplace \u2014 Create or obtain evidence for: ASP approved and live on the OKX.AI marketplace\n- [MISSING] Public X post using #OKXAI \u2014 Create or obtain evidence for: Public X post using #OKXAI\n- [MISSING] Clear demo or walkthrough no longer than 90 seconds \u2014 Create or obtain evidence for: Clear demo or walkthrough no longer than 90 seconds\n- [MISSING] Final submission form containing ASP details and X post link \u2014 Create or obtain evidence for: Final submission form containing ASP details and X post link\n\n## Proposed completion plan\n\n1. Close every missing or partial evidence item before making the corresponding claim.\n2. Capture public, independently readable evidence where the opportunity requests deployment or execution proof.\n3. Re-run Norn Score after evidence is added.\n4. Review the exact answers and attachments.\n5. Submit only after explicit approval, then save the confirmation receipt.\n\n## Evidence index\n\n- No verified evidence included.\n\n## Claims deliberately excluded\n\n- Skill claim not used as verified fact: Solidity\n- Skill claim not used as verified fact: EVM systems\n- Skill claim not used as verified fact: ZK proofs\n- Skill claim not used as verified fact: Agent payments\n- Skill claim not used as verified fact: Cross-chain infrastructure\n- Project claim not used as verified fact: OpenRails\n- Project claim not used as verified fact: PrismFlashZK\n",
@@ -343,13 +343,13 @@
       "Project claim not used as verified fact: PrismFlashZK"
     ],
     "approvalStatus": "draft",
-    "createdAt": "2026-07-26T11:20:31.235256Z",
+    "createdAt": "2026-07-26T11:23:18.356892Z",
     "digest": "90ceb2578ad67859d9bb56fe79ea7269e938fdfa6b21c2763be9b13dc564dbdd"
   },
   "summary": "Evaluated 2 opportunity candidate(s). Top match: OKX.AI Genesis Hackathon at 45/100.",
   "provenance": {
     "requestDigest": "04aff0e1ca8eaa159c1772a9826688e245975bc026dd96bc866aa0a2c7ac418f",
-    "resultDigest": "8ddeb6eeb50c66c5a9e56a1893a6169631d5b859c860baf96b999f7619f052cb",
+    "resultDigest": "04f374086dddca2a63fb4c19d16c7f62bf14f417fb2510932dd74dee35ea66b4",
     "sourceUrls": [
       "https://web3.okx.com/xlayer/build-x-series",
       "https://example.com/demo-fixture"
@@ -359,6 +359,6 @@
       "2026-07-26T08:00:00Z"
     ],
     "engineVersion": "norn-score-v1",
-    "generatedAt": "2026-07-26T11:20:31.235528Z"
+    "generatedAt": "2026-07-26T11:23:18.357153Z"
   }
 }

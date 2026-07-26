@@ -11,7 +11,7 @@ def test_verified_evidence_increases_readiness():
         projects=[ProjectClaim(name="Protocol", summary="EVM smart-contract project", status="verified", capabilities=["EVM", "Solidity"], evidenceIds=["repo"])],
         preferredOpportunities=["hackathon"],
         supportedEcosystems=["EVM"],
-        evidence=[Evidence(id="repo", label="Public Solidity repository", kind="repository", status="verified", tags=["Solidity", "EVM", "public repository"])],
+        evidence=[Evidence(id="repo", label="Public Solidity repository", kind="repository", status="verified", digest="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", tags=["Solidity", "EVM", "public repository"])],
     )
     opportunity = Opportunity(
         id="o1", title="EVM Build", type="hackathon", issuer="Issuer",
@@ -33,4 +33,18 @@ def test_claimed_capability_is_not_treated_as_verified():
     )
     result = assess_fit(profile, opportunity)
     assert result.gaps[0].status in {"partial", "missing"}
+    assert result.gaps[0].status != "verified"
+
+
+def test_verified_label_without_linked_proof_gets_no_verified_credit():
+    profile = CapabilityProfile(
+        skills=[SkillClaim(name="Solidity", status="verified", evidenceIds=[])],
+        evidence=[Evidence(id="other", label="Unrelated proof", kind="other", status="verified", digest="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", tags=["writing"])],
+    )
+    opportunity = Opportunity(
+        id="o3", title="Contract Work", type="contract", issuer="Issuer",
+        requirements=["Verified Solidity implementation evidence"],
+        sourceUrl="https://example.com/work", sourceType="manual",
+    )
+    result = assess_fit(profile, opportunity)
     assert result.gaps[0].status != "verified"
