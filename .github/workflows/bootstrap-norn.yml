@@ -1,0 +1,36 @@
+name: Bootstrap Norn source
+
+on:
+  push:
+    branches:
+      - build/norn-mvp
+    paths:
+      - '.bootstrap/norn-asp.zip.b64.*'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: build/norn-mvp
+          fetch-depth: 0
+      - name: Reconstruct source archive
+        run: |
+          cat .bootstrap/norn-asp.zip.b64.* | base64 --decode > /tmp/norn-asp.zip
+          mkdir -p /tmp/norn-unpack
+          unzip -q /tmp/norn-asp.zip -d /tmp/norn-unpack
+          shopt -s dotglob
+          cp -R /tmp/norn-unpack/norn/* .
+          rm -rf .bootstrap
+      - name: Commit imported source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Import verified Norn ASP implementation' || exit 0
+          git push origin build/norn-mvp
