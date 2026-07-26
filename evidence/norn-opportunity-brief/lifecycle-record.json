@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "okx-ai-agent-service-lifecycle-v1",
+  "serviceSlug": "norn-opportunity-brief",
+  "serviceType": "A2MCP",
+  "status": "local_verified",
+  "provider": {
+    "agentId": null,
+    "serviceId": null,
+    "walletAddress": null
+  },
+  "public": {
+    "endpoint": null,
+    "deploymentPlatform": null,
+    "deploymentVersionId": null
+  },
+  "phases": {
+    "contract": {
+      "status": "blocked",
+      "recordedAt": "2026-07-26T11:16:29.883128Z",
+      "evidence": [],
+      "notes": "Business schema, price, authority and completion condition are defined. Freeze is blocked on the real HTTPS endpoint, current official settlement asset/atomic amount, and real X Layer recipient."
+    },
+    "implementation": {
+      "status": "passed",
+      "recordedAt": "2026-07-26T11:16:30.418747Z",
+      "evidence": [
+        "app/main.py",
+        "app/scoring.py",
+        "app/gaps.py",
+        "app/pack.py",
+        "app/payment.py",
+        "app/static/index.html",
+        "docs/architecture.md"
+      ],
+      "notes": "Profile, Feed, Score, Gaps, Pack, Watch, HTTP ASP endpoint, local 402 harness, SDK integration hook, storage, dashboard, redaction and replay protection implemented."
+    },
+    "localVerification": {
+      "status": "passed",
+      "recordedAt": "2026-07-26T11:16:30.962733Z",
+      "evidence": [
+        "evidence/norn-opportunity-brief/pytest-junit.xml",
+        "evidence/norn-opportunity-brief/demo-unpaid-challenge.json",
+        "evidence/norn-opportunity-brief/sample-response.json",
+        "evidence/norn-opportunity-brief/demo-replay-response.json"
+      ],
+      "notes": "Seven pytest checks passed. JUnit output stored in the evidence directory."
+    },
+    "deployment": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "publicVerification": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "identityRegistration": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "activation": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "discovery": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "independentSelfTest": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "monitoring": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    }
+  },
+  "evidence": [
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/pytest-junit.xml",
+      "sha256": "ace0d46b1a22b73b061f5773305c01285ca2d48df84eb21ed55211e76a15ce37",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/demo-unpaid-challenge.json",
+      "sha256": "cdd02b7f7c04b58ca24b57bebe3667be14101025a32bdddd681863cf5997b034",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/sample-response.json",
+      "sha256": "2bd1e171fe59a73afc704c479e19fcb4ef9ce08db7e05fa9bec06b0735952a8d",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/demo-replay-response.json",
+      "sha256": "d572cf113d4e6b4910da6f679f2aebae8b0b0266c0654703fc954f16b55055eb",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "contract",
+      "path": "evidence/norn-opportunity-brief/openapi.json",
+      "sha256": "c9c547772fc33170a46fc4edfe1905afb7cad2f383908dffeaf40062f2e5fd38",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/main.py",
+      "sha256": "96c60e073ba76c4349b5dd2725da38d1278f36de52b4c8301ef12144f50bd056",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/scoring.py",
+      "sha256": "4fd9e3cc52c851fbf09fffcff135d9a16324298b16a4b26b0d6c6045fd9d547c",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/gaps.py",
+      "sha256": "9f829ac6edb082b199fb3c626784b3c6d98a33b68eb4a3c9273580df3a38bf70",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/pack.py",
+      "sha256": "642fdff8ad85d17a3b7dcde51c6a1e6fd15ecfe2bb6d836051650ef2ad25d707",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/payment.py",
+      "sha256": "8794ea4ddc99c8605e488e26ce909a4f3782cb37e774063574df2179b24c4158",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/static/index.html",
+      "sha256": "bd17bd63ca99546ec40a11ed16ca7229fbb345d6d0566e1d06010bf7ab724772",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "docs/architecture.md",
+      "sha256": "a561edd5f75b6fa89f65edebef5f9b97138632ac1e9d08762cb803dd12ae3cef",
+      "recordedAt": "2026-07-26T11:20:31.871396Z"
+    }
+  ],
+  "limitations": [
+    "No public HTTPS deployment exists in this record yet.",
+    "Production OKX x402 verification requires current SDK installation and real facilitator credentials.",
+    "ASP identity, service ID, activation, discovery and independent consumer proof are pending external actions.",
+    "The bundled ZK grant is a labelled demonstration fixture and must not be treated as a live opportunity."
+  ],
+  "rollback": {
+    "procedure": "Deactivate the OKX service, restore the previous container image, verify health/readiness, then repeat unpaid and paid public conformance before reactivation.",
+    "lastVerifiedAt": null
+  },
+  "createdAt": "2026-07-26T11:16:29.295132Z",
+  "updatedAt": "2026-07-26T11:20:31.871396Z"
+}

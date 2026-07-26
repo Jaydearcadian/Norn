@@ -1,0 +1,13 @@
+[
+  {
+    "id": "watch_okx_genesis",
+    "opportunityId": "okx-ai-genesis-2026",
+    "title": "OKX.AI Genesis Hackathon",
+    "deadline": "2026-07-27",
+    "nextAction": "Deploy Norn, complete ASP registration, then record independent paid-call proof.",
+    "followUpAt": "2026-07-26T18:00:00Z",
+    "status": "preparing",
+    "notes": "Marketplace approval is an external gate and must not be claimed before receipt.",
+    "updatedAt": "2026-07-26T10:00:00Z"
+  }
+]

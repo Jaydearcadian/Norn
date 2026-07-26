@@ -1,0 +1,181 @@
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from pathlib import Path
+import json
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+
+from . import __version__
+from .config import Settings, settings as default_settings
+from .digests import sha256_digest
+from .discovery import DiscoveryEngine
+from .gaps import identify_gaps
+from .models import (
+    CapabilityProfile, DiscoverRequest, FitAssessment, GapRequest, HealthResponse,
+    ImportOpportunityRequest, OpportunityBriefRequest, OpportunityBriefResponse,
+    PackArtifact, PackRequest, ScoreRequest, WatchItem,
+)
+from .pack import prepare_pack
+from .payment import DemoPaymentGateway, PaymentRequired, configure_okx_payment_middleware
+from .redaction import redact
+from .scoring import assess_fit
+from .service import build_opportunity_brief
+from .store import JsonStore
+
+
+def create_app(settings: Settings = default_settings) -> FastAPI:
+    blockers = settings.validate_production()
+    if blockers and settings.environment == "production":
+        raise RuntimeError("; ".join(blockers))
+
+    app = FastAPI(
+        title="Norn",
+        version=__version__,
+        description="Verified capability to opportunity intelligence.",
+    )
+    app.state.settings = settings
+    app.state.store = JsonStore(settings)
+    app.state.discovery = DiscoveryEngine(settings, app.state.store)
+    app.state.demo_payment = DemoPaymentGateway(settings, app.state.store)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"] if settings.environment != "production" else [settings.public_base_url],
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "PATCH"],
+        allow_headers=["Content-Type", "PAYMENT-SIGNATURE", "X-PAYMENT"],
+    )
+    configure_okx_payment_middleware(app, settings)
+
+    @app.exception_handler(PaymentRequired)
+    async def payment_required_handler(_request: Request, exc: PaymentRequired):
+        return JSONResponse(
+            status_code=402,
+            content=exc.challenge,
+            headers={"PAYMENT-REQUIRED": exc.header, "Cache-Control": "no-store"},
+        )
+
+    @app.get("/health", response_model=HealthResponse)
+    async def health() -> HealthResponse:
+        current_blockers = settings.validate_production()
+        return HealthResponse(
+            status="degraded" if current_blockers else "ok",
+            service="norn",
+            version=__version__,
+            paymentMode=settings.payment_mode,
+            blockers=current_blockers,
+        )
+
+    @app.get("/ready")
+    async def ready():
+        return {"ready": not settings.validate_production(), "blockers": settings.validate_production()}
+
+    @app.get("/api/profile", response_model=CapabilityProfile)
+    async def get_profile():
+        return app.state.store.get_profile()
+
+    @app.put("/api/profile", response_model=CapabilityProfile)
+    async def put_profile(profile: CapabilityProfile):
+        profile.updatedAt = datetime.now(timezone.utc)
+        saved = app.state.store.save_profile(profile)
+        app.state.store.append_audit({"at": datetime.now(timezone.utc).isoformat(), "event": "profile.updated", "digest": sha256_digest(saved.model_dump(mode="json"))})
+        return saved
+
+    @app.post("/api/feed")
+    async def discover(request: DiscoverRequest):
+        items = await app.state.discovery.discover(request)
+        return {"items": items, "count": len(items), "liveDiscovery": settings.enable_live_discovery}
+
+    @app.post("/api/feed/import")
+    async def import_opportunities(request: ImportOpportunityRequest):
+        saved = app.state.store.save_opportunities(request.opportunities)
+        return {"count": len(saved)}
+
+    @app.post("/api/score", response_model=FitAssessment)
+    async def score(request: ScoreRequest):
+        return assess_fit(request.profile, request.opportunity)
+
+    @app.post("/api/gaps")
+    async def gaps(request: GapRequest):
+        return {"items": identify_gaps(request.profile, request.opportunity)}
+
+    @app.post("/api/packs", response_model=PackArtifact)
+    async def packs(request: PackRequest):
+        artifact = prepare_pack(request.profile, request.opportunity, request.assessment)
+        app.state.store.save_pack(artifact)
+        return artifact
+
+    @app.get("/api/packs")
+    async def list_packs():
+        return {"items": app.state.store.list_packs()}
+
+    @app.get("/api/packs/{pack_id}", response_model=PackArtifact)
+    async def get_pack(pack_id: str):
+        pack = app.state.store.get_pack(pack_id)
+        if pack is None:
+            raise HTTPException(404, "Pack not found")
+        return pack
+
+    @app.get("/api/watch")
+    async def list_watch():
+        return {"items": app.state.store.list_watch()}
+
+    @app.post("/api/watch", response_model=WatchItem)
+    async def save_watch(item: WatchItem):
+        item.updatedAt = datetime.now(timezone.utc)
+        return app.state.store.save_watch(item)
+
+    @app.post("/api/watch/digest")
+    async def watch_digest():
+        items = app.state.store.list_watch()
+        now = datetime.now(timezone.utc)
+        urgent = []
+        followups = []
+        for item in items:
+            if item.deadline:
+                days = (item.deadline - now.date()).days
+                if 0 <= days <= 7 and item.status not in {"submitted", "won", "lost", "archived"}:
+                    urgent.append({"id": item.id, "title": item.title, "daysRemaining": days, "nextAction": item.nextAction})
+            if item.followUpAt and item.followUpAt <= now and item.status not in {"won", "lost", "archived"}:
+                followups.append({"id": item.id, "title": item.title, "followUpAt": item.followUpAt, "nextAction": item.nextAction})
+        return {"urgentDeadlines": urgent, "dueFollowUps": followups, "generatedAt": now}
+
+    @app.post("/api/v1/opportunity-brief", response_model=OpportunityBriefResponse)
+    async def opportunity_brief(request: Request):
+        body = await request.body()
+        if len(body) > settings.maximum_input_bytes:
+            raise HTTPException(413, "Request exceeds MAXIMUM_INPUT_BYTES")
+        try:
+            payload = OpportunityBriefRequest.model_validate_json(body)
+        except Exception as exc:
+            raise HTTPException(422, detail={"error": "invalid_input", "message": str(exc)}) from exc
+        if settings.payment_mode == "demo":
+            payment = await app.state.demo_payment.require(request, body)
+        else:
+            payment = None
+        result = build_opportunity_brief(payload)
+        app.state.store.append_audit(redact({
+            "at": datetime.now(timezone.utc).isoformat(),
+            "event": "opportunity_brief.executed",
+            "requestDigest": result.provenance.requestDigest,
+            "resultDigest": result.provenance.resultDigest,
+            "paymentMode": settings.payment_mode,
+            "replayKey": payment.replay_key if payment else None,
+        }))
+        return result
+
+    static_dir = Path(__file__).parent / "static"
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+    @app.get("/", include_in_schema=False)
+    async def index():
+        return FileResponse(static_dir / "index.html")
+
+    return app
+
+
+app = create_app()

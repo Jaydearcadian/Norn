@@ -1,0 +1,35 @@
+{
+  "status": 402,
+  "headers": {
+    "PAYMENT-REQUIRED": "[BASE64 CHALLENGE REDACTED FROM EVIDENCE; BODY RETAINED]"
+  },
+  "body": {
+    "x402Version": 2,
+    "resource": {
+      "url": "http://testserver/api/v1/opportunity-brief",
+      "description": "Norn Opportunity Brief \u2014 local demo payment harness",
+      "mimeType": "application/json"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "eip155:1952",
+        "asset": "TEST_ASSET_NOT_FOR_PRODUCTION",
+        "amount": "10000",
+        "payTo": "0x1111111111111111111111111111111111111111",
+        "maxTimeoutSeconds": 300,
+        "extra": {
+          "name": "TEST USD",
+          "version": "1",
+          "demo": true
+        }
+      }
+    ],
+    "extensions": {
+      "norn": {
+        "environment": "demo",
+        "productionValid": false
+      }
+    }
+  }
+}
