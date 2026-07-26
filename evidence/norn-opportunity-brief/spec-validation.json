@@ -2,7 +2,9 @@
   "ok": false,
   "errors": [
     "A2MCP a2mcp.endpoint must use https://",
-    "A2MCP pricing.atomicAmount must be a positive integer string"
+    "A2MCP pricing.paymentAsset is required",
+    "A2MCP pricing.atomicAmount is required",
+    "A2MCP pricing.recipient is required"
   ],
   "serviceType": "A2MCP"
 }

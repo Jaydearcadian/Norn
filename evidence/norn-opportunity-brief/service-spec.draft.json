@@ -116,13 +116,13 @@
   "pricing": {
     "listingFeeUsdt": "0.01",
     "paymentNetwork": "eip155:196",
-    "paymentAsset": "PENDING_CURRENT_OFFICIAL_ASSET_VERIFICATION",
-    "atomicAmount": "PENDING_CURRENT_ASSET_DECIMALS",
-    "recipient": "PENDING_REAL_X_LAYER_RECIPIENT",
+    "paymentAsset": "",
+    "atomicAmount": "",
+    "recipient": "",
     "refundFailurePolicy": "No business result is generated when payment verification fails. Settled-call failure handling follows the official SDK and recorded incident policy."
   },
   "a2mcp": {
-    "endpoint": "PENDING_REAL_HTTPS_ENDPOINT",
+    "endpoint": "",
     "protocol": "http-json",
     "method": "POST",
     "toolName": "norn_opportunity_brief",
