@@ -17,8 +17,9 @@ from .gaps import identify_gaps
 from .models import (
     CapabilityProfile, DiscoverRequest, FitAssessment, GapRequest, HealthResponse,
     ImportOpportunityRequest, OpportunityBriefRequest, OpportunityBriefResponse,
-    PackArtifact, PackRequest, ScoreRequest, WatchItem,
+    PackArtifact, PackRequest, ReviewDecision, ScoreRequest, WatchItem,
 )
+from .normalization import compile_opportunity, snapshot_from_response
 from .pack import prepare_pack
 from .payment import DemoPaymentGateway, PaymentRequired, configure_okx_payment_middleware
 from .redaction import redact
@@ -32,11 +33,7 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     if configuration_errors and settings.environment == "production":
         raise RuntimeError("; ".join(configuration_errors))
 
-    app = FastAPI(
-        title="Norn",
-        version=__version__,
-        description="Verified capability to opportunity intelligence.",
-    )
+    app = FastAPI(title="Norn", version=__version__, description="Opportunity compiler and verified capability intelligence.")
     app.state.settings = settings
     app.state.store = JsonStore(settings)
     app.state.discovery = DiscoveryEngine(settings, app.state.store)
@@ -54,22 +51,12 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
 
     @app.exception_handler(PaymentRequired)
     async def payment_required_handler(_request: Request, exc: PaymentRequired):
-        return JSONResponse(
-            status_code=402,
-            content=exc.challenge,
-            headers={"PAYMENT-REQUIRED": exc.header, "Cache-Control": "no-store"},
-        )
+        return JSONResponse(status_code=402, content=exc.challenge, headers={"PAYMENT-REQUIRED": exc.header, "Cache-Control": "no-store"})
 
     @app.get("/health", response_model=HealthResponse)
     async def health() -> HealthResponse:
-        current_blockers = settings.readiness_blockers()
-        return HealthResponse(
-            status="degraded" if current_blockers else "ok",
-            service="norn",
-            version=__version__,
-            paymentMode=settings.payment_mode,
-            blockers=current_blockers,
-        )
+        blockers = settings.readiness_blockers()
+        return HealthResponse(status="degraded" if blockers else "ok", service="norn", version=__version__, paymentMode=settings.payment_mode, blockers=blockers)
 
     @app.get("/ready")
     async def ready():
@@ -90,12 +77,38 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     @app.post("/api/feed")
     async def discover(request: DiscoverRequest):
         items = await app.state.discovery.discover(request)
-        return {"items": items, "count": len(items), "liveDiscovery": settings.enable_live_discovery}
+        return {"items": items, "count": len(items), "liveDiscovery": settings.enable_live_discovery, "compilerVersion": "normalization-v2"}
 
     @app.post("/api/feed/import")
     async def import_opportunities(request: ImportOpportunityRequest):
-        saved = app.state.store.save_opportunities(request.opportunities)
+        compiled = [compile_opportunity(item, []) for item in request.opportunities]
+        saved = app.state.store.save_opportunities(compiled)
         return {"count": len(saved)}
+
+    @app.post("/api/sources/ingest")
+    async def ingest_source(payload: dict):
+        url = str(payload.get("url", ""))
+        if not url:
+            raise HTTPException(422, "url is required")
+        items = await app.state.discovery.ingest_url(url, str(payload.get("sourceType", "official")))
+        return {"items": items, "count": len(items)}
+
+    @app.get("/api/opportunities/{opportunity_id}/history")
+    async def opportunity_history(opportunity_id: str):
+        items = app.state.store.opportunity_history(opportunity_id)
+        if not items:
+            raise HTTPException(404, "Opportunity not found")
+        return {"items": items, "count": len(items)}
+
+    @app.get("/api/review-queue")
+    async def review_queue():
+        items = app.state.store.list_review_queue()
+        return {"items": items, "count": len(items)}
+
+    @app.post("/api/review-queue/{opportunity_id}/{version}")
+    async def review_opportunity(opportunity_id: str, version: int, decision: ReviewDecision):
+        app.state.store.review(opportunity_id, version, decision.status, decision.note)
+        return {"ok": True, "opportunityId": opportunity_id, "version": version, "status": decision.status}
 
     @app.post("/api/score", response_model=FitAssessment)
     async def score(request: ScoreRequest):
@@ -135,8 +148,7 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     async def watch_digest():
         items = app.state.store.list_watch()
         now = datetime.now(timezone.utc)
-        urgent = []
-        followups = []
+        urgent, followups = [], []
         for item in items:
             if item.deadline:
                 days = (item.deadline - now.date()).days
@@ -155,19 +167,9 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
             payload = OpportunityBriefRequest.model_validate_json(body)
         except Exception as exc:
             raise HTTPException(422, detail={"error": "invalid_input", "message": str(exc)}) from exc
-        if settings.payment_mode == "demo":
-            payment = await app.state.demo_payment.require(request, body)
-        else:
-            payment = None
+        payment = await app.state.demo_payment.require(request, body) if settings.payment_mode == "demo" else None
         result = build_opportunity_brief(payload)
-        app.state.store.append_audit(redact({
-            "at": datetime.now(timezone.utc).isoformat(),
-            "event": "opportunity_brief.executed",
-            "requestDigest": result.provenance.requestDigest,
-            "resultDigest": result.provenance.resultDigest,
-            "paymentMode": settings.payment_mode,
-            "replayKey": payment.replay_key if payment else None,
-        }))
+        app.state.store.append_audit(redact({"at": datetime.now(timezone.utc).isoformat(), "event": "opportunity_brief.executed", "requestDigest": result.provenance.requestDigest, "resultDigest": result.provenance.resultDigest, "paymentMode": settings.payment_mode, "replayKey": payment.replay_key if payment else None}))
         return result
 
     static_dir = Path(__file__).parent / "static"
