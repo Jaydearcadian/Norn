@@ -23,8 +23,19 @@ jobs:
           node-version: "24"
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
-      - name: Verify application
-        run: make check
+      - name: Compile Python
+        run: python -m compileall -q app
+      - name: Validate dashboard JavaScript
+        run: node --check app/static/app.js
+      - name: Run tests
+        run: python -m pytest --junitxml=pytest-junit.xml -vv
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-junit
+          path: pytest-junit.xml
+          if-no-files-found: ignore
       - name: Verify lifecycle records and complete contracts
         run: |
           python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
