@@ -24,6 +24,7 @@ from .redaction import redact
 from .scoring import assess_fit
 from .service import build_opportunity_brief
 from .store import JsonStore
+from .vision import VisionEngine, WorkflowCreate, WorkflowTransition
 
 
 def _feed_intelligence(opportunity, assessment) -> dict:
@@ -62,6 +63,7 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     app.state.store = JsonStore(settings)
     app.state.discovery = DiscoveryEngine(settings, app.state.store)
     app.state.demo_payment = DemoPaymentGateway(settings, app.state.store)
+    app.state.vision = VisionEngine(app.state.store.db_path)
 
     configure_okx_payment_middleware(app, settings)
     app.add_middleware(
@@ -137,6 +139,10 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     async def score(request: ScoreRequest):
         return assess_fit(request.profile, request.opportunity)
 
+    @app.post("/api/decision")
+    async def decision(request: ScoreRequest):
+        return app.state.vision.decision_report(request.profile, request.opportunity)
+
     @app.post("/api/gaps")
     async def gaps(request: GapRequest):
         return {"items": identify_gaps(request.profile, request.opportunity)}
@@ -157,6 +163,40 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
         if pack is None:
             raise HTTPException(404, "Pack not found")
         return pack
+
+    @app.get("/api/workflows")
+    async def list_workflows():
+        items = app.state.vision.list_workflows()
+        return {"items": items, "count": len(items)}
+
+    @app.post("/api/workflows")
+    async def create_workflow(request: WorkflowCreate):
+        return app.state.vision.create_workflow(request)
+
+    @app.get("/api/workflows/{workflow_id}")
+    async def get_workflow(workflow_id: str):
+        workflow = app.state.vision.get_workflow(workflow_id)
+        if workflow is None:
+            raise HTTPException(404, "Workflow not found")
+        return workflow
+
+    @app.post("/api/workflows/{workflow_id}/transition")
+    async def transition_workflow(workflow_id: str, transition: WorkflowTransition):
+        try:
+            workflow = app.state.vision.transition(workflow_id, transition)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        if workflow is None:
+            raise HTTPException(404, "Workflow not found")
+        return workflow
+
+    @app.get("/api/launch-readiness")
+    async def launch_readiness():
+        return app.state.vision.launch_scorecard(
+            app.state.store.list_opportunities(),
+            app.state.store.get_profile(),
+            payment_ready=not settings.readiness_blockers(),
+        )
 
     @app.get("/api/watch")
     async def list_watch():
