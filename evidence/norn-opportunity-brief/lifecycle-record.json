@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "okx-ai-agent-service-lifecycle-v1",
+  "serviceSlug": "norn-opportunity-brief",
+  "serviceType": "A2MCP",
+  "status": "local_verified",
+  "provider": {
+    "agentId": null,
+    "serviceId": null,
+    "walletAddress": null
+  },
+  "public": {
+    "endpoint": null,
+    "deploymentPlatform": null,
+    "deploymentVersionId": null
+  },
+  "phases": {
+    "contract": {
+      "status": "blocked",
+      "recordedAt": "2026-07-26T11:16:29.883128Z",
+      "evidence": [],
+      "notes": "Business schema, price, authority and completion condition are defined. Freeze is blocked on the real HTTPS endpoint, current official settlement asset/atomic amount, and real X Layer recipient."
+    },
+    "implementation": {
+      "status": "passed",
+      "recordedAt": "2026-07-26T11:16:30.418747Z",
+      "evidence": [
+        "app/main.py",
+        "app/models.py",
+        "app/matching.py",
+        "app/scoring.py",
+        "app/gaps.py",
+        "app/pack.py",
+        "app/payment.py",
+        "app/discovery.py",
+        "app/static/index.html",
+        "app/static/app.js",
+        "app/static/styles.css",
+        "docs/architecture.md"
+      ],
+      "notes": "Profile, Feed, Score, Gaps, Pack, Watch, HTTP ASP endpoint, local 402 harness, SDK integration hook, storage, dashboard, redaction and replay protection implemented."
+    },
+    "localVerification": {
+      "status": "passed",
+      "recordedAt": "2026-07-26T11:16:30.962733Z",
+      "evidence": [
+        "evidence/norn-opportunity-brief/pytest-junit.xml",
+        "evidence/norn-opportunity-brief/http-smoke.txt",
+        "evidence/norn-opportunity-brief/demo-unpaid-challenge.json",
+        "evidence/norn-opportunity-brief/sample-response.json",
+        "evidence/norn-opportunity-brief/demo-replay-response.json"
+      ],
+      "notes": "Ten pytest checks passed plus a real HTTP free-mode smoke test. JUnit and sanitised responses are stored in the evidence directory."
+    },
+    "deployment": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "publicVerification": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "identityRegistration": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "activation": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "discovery": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "independentSelfTest": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "monitoring": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    }
+  },
+  "evidence": [
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/pytest-junit.xml",
+      "sha256": "0d677b929b748f0f77244afaeae3dd98d48ea9e40c7561639e74cf0fed95ec26",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/http-smoke.txt",
+      "sha256": "1c5b73932babe2a737345d49f5913c7ad73f1326cbc763ee3233d74553cbd7cb",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/demo-unpaid-challenge.json",
+      "sha256": "fce163f2953d7d961398777ff3c8d637cf1f653edd99562c23ff7b2ee9d4b367",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/sample-response.json",
+      "sha256": "d834e4ce362368b8c55fcc9adf6738f6dc12fa57e269f7db44739fda05d8b77c",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "test",
+      "path": "evidence/norn-opportunity-brief/demo-replay-response.json",
+      "sha256": "d572cf113d4e6b4910da6f679f2aebae8b0b0266c0654703fc954f16b55055eb",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "contract",
+      "path": "evidence/norn-opportunity-brief/openapi.json",
+      "sha256": "c9c547772fc33170a46fc4edfe1905afb7cad2f383908dffeaf40062f2e5fd38",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/main.py",
+      "sha256": "96c60e073ba76c4349b5dd2725da38d1278f36de52b4c8301ef12144f50bd056",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/models.py",
+      "sha256": "2c7004905e9363e31563f02fa1d7d4229b215e5e370bcea918398b1dc692d5ce",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/matching.py",
+      "sha256": "9f2805fb556b906dbc5bb445065660adf2f21d22569d560b56eef13479b9d87b",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/scoring.py",
+      "sha256": "4fd9e3cc52c851fbf09fffcff135d9a16324298b16a4b26b0d6c6045fd9d547c",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/gaps.py",
+      "sha256": "9f829ac6edb082b199fb3c626784b3c6d98a33b68eb4a3c9273580df3a38bf70",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/pack.py",
+      "sha256": "41ebd1516db0934a79177fbe3714bde7b4dc2264835182fba300e8db8b4f06fe",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/payment.py",
+      "sha256": "8794ea4ddc99c8605e488e26ce909a4f3782cb37e774063574df2179b24c4158",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/discovery.py",
+      "sha256": "a6ec9d5908015abb2a3653d26e23344684a269e15f9447831978f4221f0c0834",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/static/index.html",
+      "sha256": "bd17bd63ca99546ec40a11ed16ca7229fbb345d6d0566e1d06010bf7ab724772",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/static/app.js",
+      "sha256": "d2bdf68f258b9b04934bc9b6b4ce46a47793dee8ee363e5190bc450473e7f541",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "app/static/styles.css",
+      "sha256": "e3281516f343a838564d8f424e9b0d7dc0a0c3cdc0d03859970ea071a579d160",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "implementation",
+      "path": "docs/architecture.md",
+      "sha256": "a561edd5f75b6fa89f65edebef5f9b97138632ac1e9d08762cb803dd12ae3cef",
+      "recordedAt": "2026-07-26T11:23:19.027121Z"
+    }
+  ],
+  "limitations": [
+    "No public HTTPS deployment exists in this record yet.",
+    "Production OKX x402 verification requires current SDK installation and real facilitator credentials.",
+    "ASP identity, service ID, activation, discovery and independent consumer proof are pending external actions.",
+    "The bundled ZK grant is a labelled demonstration fixture and must not be treated as a live opportunity."
+  ],
+  "rollback": {
+    "procedure": "Deactivate the OKX service, restore the previous container image, verify health/readiness, then repeat unpaid and paid public conformance before reactivation.",
+    "lastVerifiedAt": null
+  },
+  "createdAt": "2026-07-26T11:16:29.295132Z",
+  "updatedAt": "2026-07-26T11:23:19.027121Z"
+}

@@ -1,0 +1,1482 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Norn",
+    "description": "Verified capability to opportunity intelligence.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "summary": "Ready",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "summary": "Get Profile",
+        "operationId": "get_profile_api_profile_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilityProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put Profile",
+        "operationId": "put_profile_api_profile_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapabilityProfile"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilityProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feed": {
+      "post": {
+        "summary": "Discover",
+        "operationId": "discover_api_feed_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoverRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feed/import": {
+      "post": {
+        "summary": "Import Opportunities",
+        "operationId": "import_opportunities_api_feed_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportOpportunityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/score": {
+      "post": {
+        "summary": "Score",
+        "operationId": "score_api_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FitAssessment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gaps": {
+      "post": {
+        "summary": "Gaps",
+        "operationId": "gaps_api_gaps_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/packs": {
+      "get": {
+        "summary": "List Packs",
+        "operationId": "list_packs_api_packs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Packs",
+        "operationId": "packs_api_packs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackArtifact"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/packs/{pack_id}": {
+      "get": {
+        "summary": "Get Pack",
+        "operationId": "get_pack_api_packs__pack_id__get",
+        "parameters": [
+          {
+            "name": "pack_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Pack Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackArtifact"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/watch": {
+      "get": {
+        "summary": "List Watch",
+        "operationId": "list_watch_api_watch_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Save Watch",
+        "operationId": "save_watch_api_watch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/watch/digest": {
+      "post": {
+        "summary": "Watch Digest",
+        "operationId": "watch_digest_api_watch_digest_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/opportunity-brief": {
+      "post": {
+        "summary": "Opportunity Brief",
+        "operationId": "opportunity_brief_api_v1_opportunity_brief_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityBriefResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CapabilityProfile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "default": "primary"
+          },
+          "displayName": {
+            "type": "string",
+            "title": "Displayname",
+            "default": "Norn Builder"
+          },
+          "biography": {
+            "type": "string",
+            "title": "Biography",
+            "default": ""
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillClaim"
+            },
+            "type": "array",
+            "title": "Skills"
+          },
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ProjectClaim"
+            },
+            "type": "array",
+            "title": "Projects"
+          },
+          "preferredOpportunities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferredopportunities"
+          },
+          "supportedEcosystems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supportedecosystems"
+          },
+          "constraints": {
+            "$ref": "#/components/schemas/ProfileConstraints"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "title": "CapabilityProfile"
+      },
+      "ClaimStatus": {
+        "type": "string",
+        "enum": [
+          "verified",
+          "claimed",
+          "aspirational"
+        ],
+        "title": "ClaimStatus"
+      },
+      "CriterionScore": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "maximum": {
+            "type": "number",
+            "title": "Maximum"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "score",
+          "maximum",
+          "reason"
+        ],
+        "title": "CriterionScore"
+      },
+      "DiscoverRequest": {
+        "properties": {
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CapabilityProfile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "default": ""
+          },
+          "types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Types"
+          },
+          "maximumResults": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Maximumresults",
+            "default": 25
+          }
+        },
+        "type": "object",
+        "title": "DiscoverRequest"
+      },
+      "Evidence": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "repository",
+              "deployment",
+              "test",
+              "transaction",
+              "demo",
+              "documentation",
+              "profile",
+              "other"
+            ],
+            "title": "Kind"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2083,
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Digest"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus",
+            "default": "claimed"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "kind"
+        ],
+        "title": "Evidence"
+      },
+      "FitAssessment": {
+        "properties": {
+          "opportunityId": {
+            "type": "string",
+            "title": "Opportunityid"
+          },
+          "score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score"
+          },
+          "expectedValueIndex": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Expectedvalueindex"
+          },
+          "eligibility": {
+            "type": "string",
+            "enum": [
+              "eligible",
+              "likely",
+              "uncertain",
+              "ineligible"
+            ],
+            "title": "Eligibility"
+          },
+          "recommendation": {
+            "type": "string",
+            "enum": [
+              "pursue_now",
+              "close_gaps_first",
+              "watch",
+              "skip"
+            ],
+            "title": "Recommendation"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionScore"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "strongEvidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strongevidence"
+          },
+          "missingEvidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missingevidence"
+          },
+          "rationale": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Rationale"
+          },
+          "gaps": {
+            "items": {
+              "$ref": "#/components/schemas/GapItem"
+            },
+            "type": "array",
+            "title": "Gaps"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "opportunityId",
+          "score",
+          "expectedValueIndex",
+          "eligibility",
+          "recommendation",
+          "criteria",
+          "strongEvidence",
+          "missingEvidence",
+          "rationale",
+          "gaps"
+        ],
+        "title": "FitAssessment"
+      },
+      "GapItem": {
+        "properties": {
+          "requirement": {
+            "type": "string",
+            "title": "Requirement"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "partial",
+              "missing",
+              "not_applicable"
+            ],
+            "title": "Status"
+          },
+          "matchedEvidenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matchedevidenceids"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "recommendedAction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendedaction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requirement",
+          "status",
+          "reason"
+        ],
+        "title": "GapItem"
+      },
+      "GapRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/CapabilityProfile"
+          },
+          "opportunity": {
+            "$ref": "#/components/schemas/Opportunity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile",
+          "opportunity"
+        ],
+        "title": "GapRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "paymentMode": {
+            "type": "string",
+            "title": "Paymentmode"
+          },
+          "blockers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Blockers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "version",
+          "paymentMode"
+        ],
+        "title": "HealthResponse"
+      },
+      "ImportOpportunityRequest": {
+        "properties": {
+          "opportunities": {
+            "items": {
+              "$ref": "#/components/schemas/Opportunity"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Opportunities"
+          }
+        },
+        "type": "object",
+        "required": [
+          "opportunities"
+        ],
+        "title": "ImportOpportunityRequest"
+      },
+      "Opportunity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "job",
+              "contract",
+              "grant",
+              "hackathon",
+              "bounty",
+              "accelerator",
+              "investment",
+              "research",
+              "partnership",
+              "rfp",
+              "speaking",
+              "publishing",
+              "competition",
+              "incentive",
+              "other"
+            ],
+            "title": "Type"
+          },
+          "issuer": {
+            "type": "string",
+            "title": "Issuer"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "value": {
+            "$ref": "#/components/schemas/OpportunityValue"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "requirements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Requirements"
+          },
+          "preferredCapabilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferredcapabilities"
+          },
+          "ecosystems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ecosystems"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Sourceurl"
+          },
+          "sourceTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sourcetimestamp"
+          },
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "official",
+              "aggregator",
+              "manual",
+              "fixture"
+            ],
+            "title": "Sourcetype",
+            "default": "manual"
+          },
+          "applicationEffort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Applicationeffort",
+            "default": "medium"
+          },
+          "competitiveIntensity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "unknown"
+            ],
+            "title": "Competitiveintensity",
+            "default": "unknown"
+          },
+          "longTermValue": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Longtermvalue",
+            "default": 50
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closing",
+              "closed",
+              "unknown"
+            ],
+            "title": "Status",
+            "default": "unknown"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "type",
+          "issuer",
+          "sourceUrl"
+        ],
+        "title": "Opportunity"
+      },
+      "OpportunityBriefResponse": {
+        "properties": {
+          "ranked": {
+            "items": {
+              "$ref": "#/components/schemas/RankedOpportunity"
+            },
+            "type": "array",
+            "title": "Ranked"
+          },
+          "topPack": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PackArtifact"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ranked",
+          "summary",
+          "provenance"
+        ],
+        "title": "OpportunityBriefResponse"
+      },
+      "OpportunityValue": {
+        "properties": {
+          "minimum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimum"
+          },
+          "maximum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximum"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "OpportunityValue"
+      },
+      "PackArtifact": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "opportunityId": {
+            "type": "string",
+            "title": "Opportunityid"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "includedEvidenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Includedevidenceids"
+          },
+          "excludedClaims": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Excludedclaims"
+          },
+          "approvalStatus": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "approved",
+              "submitted"
+            ],
+            "title": "Approvalstatus",
+            "default": "draft"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "digest": {
+            "type": "string",
+            "title": "Digest"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "opportunityId",
+          "title",
+          "content",
+          "includedEvidenceIds",
+          "excludedClaims",
+          "digest"
+        ],
+        "title": "PackArtifact"
+      },
+      "PackRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/CapabilityProfile"
+          },
+          "opportunity": {
+            "$ref": "#/components/schemas/Opportunity"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FitAssessment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "markdown",
+              "json"
+            ],
+            "title": "Format",
+            "default": "markdown"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile",
+          "opportunity"
+        ],
+        "title": "PackRequest"
+      },
+      "ProfileConstraints": {
+        "properties": {
+          "remote": {
+            "type": "boolean",
+            "title": "Remote",
+            "default": true
+          },
+          "minimumValue": {
+            "type": "number",
+            "title": "Minimumvalue",
+            "default": 0
+          },
+          "currencies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Currencies"
+          },
+          "excludedCategories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Excludedcategories"
+          },
+          "deadlineBufferDays": {
+            "type": "integer",
+            "title": "Deadlinebufferdays",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "title": "ProfileConstraints"
+      },
+      "ProjectClaim": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus",
+            "default": "claimed"
+          },
+          "ecosystems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ecosystems"
+          },
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Capabilities"
+          },
+          "evidenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidenceids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ProjectClaim"
+      },
+      "Provenance": {
+        "properties": {
+          "requestDigest": {
+            "type": "string",
+            "title": "Requestdigest"
+          },
+          "resultDigest": {
+            "type": "string",
+            "title": "Resultdigest"
+          },
+          "sourceUrls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sourceurls"
+          },
+          "sourceTimestamps": {
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "type": "array",
+            "title": "Sourcetimestamps"
+          },
+          "engineVersion": {
+            "type": "string",
+            "title": "Engineversion",
+            "default": "norn-score-v1"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestDigest",
+          "resultDigest",
+          "sourceUrls",
+          "sourceTimestamps"
+        ],
+        "title": "Provenance"
+      },
+      "RankedOpportunity": {
+        "properties": {
+          "opportunity": {
+            "$ref": "#/components/schemas/Opportunity"
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/FitAssessment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "opportunity",
+          "assessment"
+        ],
+        "title": "RankedOpportunity"
+      },
+      "ScoreRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/CapabilityProfile"
+          },
+          "opportunity": {
+            "$ref": "#/components/schemas/Opportunity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile",
+          "opportunity"
+        ],
+        "title": "ScoreRequest"
+      },
+      "SkillClaim": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus",
+            "default": "claimed"
+          },
+          "evidenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidenceids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SkillClaim"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WatchItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "opportunityId": {
+            "type": "string",
+            "title": "Opportunityid"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "nextAction": {
+            "type": "string",
+            "title": "Nextaction"
+          },
+          "followUpAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Followupat"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "watching",
+              "preparing",
+              "ready",
+              "submitted",
+              "won",
+              "lost",
+              "archived"
+            ],
+            "title": "Status",
+            "default": "watching"
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "default": ""
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "opportunityId",
+          "title",
+          "nextAction"
+        ],
+        "title": "WatchItem"
+      }
+    }
+  }
+}

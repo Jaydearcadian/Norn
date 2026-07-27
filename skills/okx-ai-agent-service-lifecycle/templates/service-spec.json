@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "okx-ai-service-spec-v1",
+  "serviceSlug": "replace-me",
+  "serviceType": "A2MCP",
+  "name": "",
+  "agentDescription": "",
+  "serviceDescription": {
+    "capability": "",
+    "requiredInputs": []
+  },
+  "customer": "",
+  "outcome": "",
+  "fulfillmentMode": "machine",
+  "inputs": {
+    "schema": {},
+    "examples": []
+  },
+  "outputs": {
+    "schema": {},
+    "acceptanceCriteria": []
+  },
+  "errors": [],
+  "limits": {
+    "timeoutMs": null,
+    "maximumInputBytes": null,
+    "ratePolicy": ""
+  },
+  "pricing": {
+    "listingFeeUsdt": "",
+    "paymentNetwork": "",
+    "paymentAsset": "",
+    "atomicAmount": "",
+    "recipient": "",
+    "refundFailurePolicy": ""
+  },
+  "a2mcp": {
+    "endpoint": "",
+    "protocol": "mcp-jsonrpc",
+    "method": "POST",
+    "toolName": "service_use",
+    "freeMethods": ["initialize", "tools/list"],
+    "paymentRequiredFor": ["tools/call"]
+  },
+  "a2a": {
+    "taskCategories": [],
+    "negotiatedPricing": true,
+    "milestones": [],
+    "revisionPolicy": "",
+    "cancellationPolicy": "",
+    "disputePolicy": ""
+  },
+  "authority": {
+    "runtimeSignsForUser": false,
+    "runtimeBroadcastsForUser": false,
+    "humanApprovalRequired": true
+  },
+  "provenance": {
+    "requiredFields": [],
+    "sourcePolicy": ""
+  },
+  "safety": {
+    "excludedActions": [],
+    "regulatedConstraints": [],
+    "sensitiveDataPolicy": "Never retain or echo reusable authorization material."
+  },
+  "version": "0.1.0"
+}

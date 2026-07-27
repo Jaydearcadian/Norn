@@ -1,0 +1,134 @@
+{
+  "profile": {
+    "id": "primary",
+    "displayName": "Jaydearcadian",
+    "biography": "Technical product builder working across agent payments, EVM infrastructure, privacy and programmable execution.",
+    "skills": [
+      {
+        "name": "Solidity",
+        "status": "claimed",
+        "evidenceIds": []
+      },
+      {
+        "name": "EVM systems",
+        "status": "claimed",
+        "evidenceIds": []
+      },
+      {
+        "name": "ZK proofs",
+        "status": "claimed",
+        "evidenceIds": []
+      },
+      {
+        "name": "Agent payments",
+        "status": "claimed",
+        "evidenceIds": []
+      },
+      {
+        "name": "Cross-chain infrastructure",
+        "status": "claimed",
+        "evidenceIds": []
+      }
+    ],
+    "projects": [
+      {
+        "name": "OpenRails",
+        "summary": "Bounded agent-payment and streaming payment infrastructure.",
+        "status": "claimed",
+        "ecosystems": [
+          "EVM",
+          "X Layer"
+        ],
+        "capabilities": [
+          "agent payments",
+          "session policy",
+          "settlement"
+        ],
+        "evidenceIds": []
+      },
+      {
+        "name": "PrismFlashZK",
+        "summary": "Privacy and zero-knowledge infrastructure project.",
+        "status": "claimed",
+        "ecosystems": [
+          "EVM",
+          "ZK"
+        ],
+        "capabilities": [
+          "zero knowledge",
+          "privacy"
+        ],
+        "evidenceIds": []
+      }
+    ],
+    "preferredOpportunities": [
+      "grants",
+      "hackathons",
+      "technical partnerships",
+      "paid integrations",
+      "developer bounties"
+    ],
+    "supportedEcosystems": [
+      "EVM",
+      "X Layer",
+      "LayerZero",
+      "ZK",
+      "AI agents"
+    ],
+    "constraints": {
+      "remote": true,
+      "minimumValue": 0,
+      "currencies": [
+        "USD",
+        "USDT"
+      ],
+      "excludedCategories": [],
+      "deadlineBufferDays": 1
+    },
+    "evidence": [],
+    "updatedAt": "2026-07-26T10:00:00Z"
+  },
+  "opportunities": [
+    {
+      "id": "okx-ai-genesis-2026",
+      "title": "OKX.AI Genesis Hackathon",
+      "type": "hackathon",
+      "issuer": "OKX.AI",
+      "summary": "Build and list a practical Agent Service Provider on OKX.AI, demonstrate it publicly, and submit before the campaign deadline.",
+      "value": {
+        "minimum": 1000,
+        "maximum": 10000,
+        "currency": "USDT",
+        "note": "Award-dependent; category prizes vary."
+      },
+      "deadline": "2026-07-27",
+      "requirements": [
+        "A working ASP that solves a clear real-world use case",
+        "ASP approved and live on the OKX.AI marketplace",
+        "Public X post using #OKXAI",
+        "Clear demo or walkthrough no longer than 90 seconds",
+        "Final submission form containing ASP details and X post link"
+      ],
+      "preferredCapabilities": [
+        "AI agents",
+        "MCP",
+        "agent payments",
+        "software utility"
+      ],
+      "ecosystems": [
+        "OKX.AI",
+        "X Layer",
+        "x402"
+      ],
+      "sourceUrl": "https://web3.okx.com/xlayer/build-x-series",
+      "sourceTimestamp": "2026-07-26T08:00:00Z",
+      "sourceType": "official",
+      "applicationEffort": "high",
+      "competitiveIntensity": "high",
+      "longTermValue": 90,
+      "status": "closing"
+    }
+  ],
+  "includePackForTopOpportunity": true,
+  "maximumResults": 5
+}
