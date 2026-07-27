@@ -24,6 +24,9 @@ from .redaction import redact
 from .scoring import assess_fit
 from .service import build_opportunity_brief
 from .store import JsonStore
+from .vision import (
+    OutcomeRecord, VisionStore, WorkflowCreate, WorkflowTaskCreate, WorkflowTransition,
+)
 
 
 def _feed_intelligence(opportunity, assessment) -> dict:
@@ -60,6 +63,7 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     app = FastAPI(title="Norn", version=__version__, description="Opportunity compiler and verified capability intelligence.")
     app.state.settings = settings
     app.state.store = JsonStore(settings)
+    app.state.vision = VisionStore(app.state.store.db_path)
     app.state.discovery = DiscoveryEngine(settings, app.state.store)
     app.state.demo_payment = DemoPaymentGateway(settings, app.state.store)
 
@@ -137,6 +141,10 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     async def score(request: ScoreRequest):
         return assess_fit(request.profile, request.opportunity)
 
+    @app.post("/api/v2/assess")
+    async def confidence_assessment(request: ScoreRequest):
+        return app.state.vision.assess(request.profile, request.opportunity)
+
     @app.post("/api/gaps")
     async def gaps(request: GapRequest):
         return {"items": identify_gaps(request.profile, request.opportunity)}
@@ -157,6 +165,65 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
         if pack is None:
             raise HTTPException(404, "Pack not found")
         return pack
+
+    @app.get("/api/workflows")
+    async def list_workflows():
+        return {"items": app.state.vision.list_workflows()}
+
+    @app.post("/api/workflows")
+    async def create_workflow(request: WorkflowCreate):
+        return app.state.vision.create_workflow(request)
+
+    @app.get("/api/workflows/{workflow_id}")
+    async def get_workflow(workflow_id: str):
+        try:
+            return app.state.vision.get_workflow(workflow_id)
+        except KeyError as exc:
+            raise HTTPException(404, "Workflow not found") from exc
+
+    @app.post("/api/workflows/{workflow_id}/transition")
+    async def transition_workflow(workflow_id: str, transition: WorkflowTransition):
+        try:
+            return app.state.vision.transition(workflow_id, transition)
+        except KeyError as exc:
+            raise HTTPException(404, "Workflow not found") from exc
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.post("/api/workflows/{workflow_id}/tasks")
+    async def create_workflow_task(workflow_id: str, task: WorkflowTaskCreate):
+        try:
+            return app.state.vision.add_task(workflow_id, task)
+        except KeyError as exc:
+            raise HTTPException(404, "Workflow not found") from exc
+
+    @app.post("/api/workflows/{workflow_id}/tasks/{task_id}/complete")
+    async def complete_workflow_task(workflow_id: str, task_id: str):
+        try:
+            return app.state.vision.complete_task(workflow_id, task_id)
+        except KeyError as exc:
+            raise HTTPException(404, "Workflow or task not found") from exc
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.post("/api/workflows/{workflow_id}/outcome")
+    async def record_workflow_outcome(workflow_id: str, outcome: OutcomeRecord):
+        try:
+            return app.state.vision.record_outcome(workflow_id, outcome)
+        except KeyError as exc:
+            raise HTTPException(404, "Workflow not found") from exc
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.get("/api/quality/benchmark")
+    async def quality_benchmark():
+        return app.state.vision.benchmark(app.state.store.list_opportunities())
+
+    @app.get("/api/quality/readiness")
+    async def vision_readiness():
+        deployment_ready = settings.environment == "production" and settings.public_base_url.startswith("https://")
+        payment_ready = deployment_ready and settings.payment_mode == "okx" and not settings.configuration_errors()
+        return app.state.vision.readiness(app.state.store.list_opportunities(), payment_ready, deployment_ready)
 
     @app.get("/api/watch")
     async def list_watch():
