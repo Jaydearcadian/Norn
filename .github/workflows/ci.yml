@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - build/norn-mvp
+      - agent/integrate-norn
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-dev.txt
+      - name: Compile Python
+        run: python -m compileall -q app
+      - name: Check dashboard JavaScript
+        run: node --check app/static/app.js
+      - name: Run tests
+        run: python -m pytest
+      - name: Validate lifecycle record
+        run: python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
+      - name: Validate draft service spec
+        run: |
+          set +e
+          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-brief/service-spec.draft.json
+          code=$?
+          set -e
+          test "$code" -ne 0
