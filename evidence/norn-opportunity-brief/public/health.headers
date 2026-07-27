@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Mon, 27 Jul 2026 08:20:18 GMT
+Content-Type: application/json
+Content-Length: 85
+Connection: keep-alive
+
