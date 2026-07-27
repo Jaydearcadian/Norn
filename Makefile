@@ -3,12 +3,12 @@ run:
 	PYTHONPATH=. ./scripts/run.sh
 
 test:
-	PYTHONPATH=. pytest
+	python3 -m pytest
 
 check:
 	python3 -m compileall -q app
 	node --check app/static/app.js
-	PYTHONPATH=. pytest
+	python3 -m pytest
 
 lifecycle:
 	python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
