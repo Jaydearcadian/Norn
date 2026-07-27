@@ -1,0 +1,89 @@
+{
+  "id": "primary",
+  "displayName": "Jaydearcadian",
+  "biography": "Technical product builder working across agent payments, EVM infrastructure, privacy and programmable execution.",
+  "skills": [
+    {
+      "name": "Solidity",
+      "status": "claimed",
+      "evidenceIds": []
+    },
+    {
+      "name": "EVM systems",
+      "status": "claimed",
+      "evidenceIds": []
+    },
+    {
+      "name": "ZK proofs",
+      "status": "claimed",
+      "evidenceIds": []
+    },
+    {
+      "name": "Agent payments",
+      "status": "claimed",
+      "evidenceIds": []
+    },
+    {
+      "name": "Cross-chain infrastructure",
+      "status": "claimed",
+      "evidenceIds": []
+    }
+  ],
+  "projects": [
+    {
+      "name": "OpenRails",
+      "summary": "Bounded agent-payment and streaming payment infrastructure.",
+      "status": "claimed",
+      "ecosystems": [
+        "EVM",
+        "X Layer"
+      ],
+      "capabilities": [
+        "agent payments",
+        "session policy",
+        "settlement"
+      ],
+      "evidenceIds": []
+    },
+    {
+      "name": "PrismFlashZK",
+      "summary": "Privacy and zero-knowledge infrastructure project.",
+      "status": "claimed",
+      "ecosystems": [
+        "EVM",
+        "ZK"
+      ],
+      "capabilities": [
+        "zero knowledge",
+        "privacy"
+      ],
+      "evidenceIds": []
+    }
+  ],
+  "preferredOpportunities": [
+    "grants",
+    "hackathons",
+    "technical partnerships",
+    "paid integrations",
+    "developer bounties"
+  ],
+  "supportedEcosystems": [
+    "EVM",
+    "X Layer",
+    "LayerZero",
+    "ZK",
+    "AI agents"
+  ],
+  "constraints": {
+    "remote": true,
+    "minimumValue": 0,
+    "currencies": [
+      "USD",
+      "USDT"
+    ],
+    "excludedCategories": [],
+    "deadlineBufferDays": 1
+  },
+  "evidence": [],
+  "updatedAt": "2026-07-26T10:00:00Z"
+}

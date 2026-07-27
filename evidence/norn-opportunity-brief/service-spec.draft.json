@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "okx-ai-service-spec-v1",
+  "serviceSlug": "norn-opportunity-brief",
+  "serviceType": "A2MCP",
+  "name": "Norn Opportunity Brief",
+  "agentDescription": "Norn converts verified capabilities into an explainable pipeline of funding, builder and commercial opportunities.",
+  "serviceDescription": {
+    "capability": "Rank up to 25 normalised opportunities against an evidence-backed profile and return fit, gaps, actions, provenance and an optional application draft.",
+    "requiredInputs": [
+      "Capability profile with claim status and evidence",
+      "One or more normalised opportunities with source provenance",
+      "Maximum result count and pack preference"
+    ]
+  },
+  "customer": "Technical developers, teams and projects pursuing grants, hackathons, bounties, partnerships or paid integrations.",
+  "outcome": "A schema-valid ranked opportunity brief with explainable scoring, evidence gaps, next actions, provenance digests and an optional approval-gated draft pack.",
+  "fulfillmentMode": "machine",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "required": [
+        "profile",
+        "opportunities"
+      ],
+      "properties": {
+        "profile": {
+          "type": "object"
+        },
+        "opportunities": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 25
+        },
+        "includePackForTopOpportunity": {
+          "type": "boolean"
+        },
+        "maximumResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      }
+    },
+    "examples": [
+      "evidence/norn-opportunity-brief/sample-request.json"
+    ]
+  },
+  "outputs": {
+    "schema": {
+      "type": "object",
+      "required": [
+        "ranked",
+        "summary",
+        "provenance"
+      ],
+      "properties": {
+        "ranked": {
+          "type": "array"
+        },
+        "topPack": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "object",
+          "required": [
+            "requestDigest",
+            "resultDigest",
+            "sourceUrls",
+            "sourceTimestamps",
+            "engineVersion"
+          ]
+        }
+      }
+    },
+    "acceptanceCriteria": [
+      "All input opportunities are evaluated or explicitly rejected",
+      "Scores remain within 0-100 and include criterion reasons",
+      "Claimed or aspirational evidence is never represented as verified",
+      "Request and result digests are returned",
+      "Generated pack remains draft and approval-gated"
+    ]
+  },
+  "errors": [
+    {
+      "code": "invalid_input",
+      "http": 422
+    },
+    {
+      "code": "payment_required",
+      "http": 402
+    },
+    {
+      "code": "payment_replay",
+      "http": 409
+    },
+    {
+      "code": "request_too_large",
+      "http": 413
+    },
+    {
+      "code": "upstream_unavailable",
+      "http": 503
+    }
+  ],
+  "limits": {
+    "timeoutMs": 30000,
+    "maximumInputBytes": 262144,
+    "ratePolicy": "Hosting-level rate limit plus x402 per-call settlement; maximum 25 opportunities per invocation."
+  },
+  "pricing": {
+    "listingFeeUsdt": "0.01",
+    "paymentNetwork": "eip155:196",
+    "paymentAsset": "",
+    "atomicAmount": "",
+    "recipient": "",
+    "refundFailurePolicy": "No business result is generated when payment verification fails. Settled-call failure handling follows the official SDK and recorded incident policy."
+  },
+  "a2mcp": {
+    "endpoint": "",
+    "protocol": "http-json",
+    "method": "POST",
+    "toolName": "norn_opportunity_brief",
+    "freeMethods": [
+      "GET /health",
+      "GET /ready"
+    ],
+    "paymentRequiredFor": [
+      "POST /api/v1/opportunity-brief"
+    ]
+  },
+  "a2a": {
+    "taskCategories": [],
+    "negotiatedPricing": false,
+    "milestones": [],
+    "revisionPolicy": "",
+    "cancellationPolicy": "",
+    "disputePolicy": ""
+  },
+  "authority": {
+    "runtimeSignsForUser": false,
+    "runtimeBroadcastsForUser": false,
+    "humanApprovalRequired": true
+  },
+  "provenance": {
+    "requiredFields": [
+      "requestDigest",
+      "resultDigest",
+      "sourceUrls",
+      "sourceTimestamps",
+      "engineVersion",
+      "generatedAt"
+    ],
+    "sourcePolicy": "Every opportunity must include a source URL and timestamp. Fixture sources must be labelled and excluded from real submissions."
+  },
+  "safety": {
+    "excludedActions": [
+      "Automatic application submission",
+      "Fabricating experience, customers, revenue, deployment, partnership, audit or on-chain proof",
+      "Custody, signing or broadcasting for the user"
+    ],
+    "regulatedConstraints": [
+      "Respect source terms and authorised connector scopes",
+      "Human review required for every application submission"
+    ],
+    "sensitiveDataPolicy": "Never retain or echo reusable authorisation, payment signatures, private keys or facilitator credentials."
+  },
+  "version": "0.1.0"
+}

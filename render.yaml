@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: norn-asp
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: NORN_DATA_DIR
+        value: /data
+      - key: PAYMENT_MODE
+        value: okx
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: PAY_TO_ADDRESS
+        sync: false
+      - key: OKX_API_KEY
+        sync: false
+      - key: OKX_SECRET_KEY
+        sync: false
+      - key: OKX_PASSPHRASE
+        sync: false
+    disk:
+      name: norn-data
+      mountPath: /data
+      sizeGB: 1

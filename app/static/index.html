@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Norn turns verified capabilities into a managed pipeline of high-fit opportunities." />
+  <title>Norn — Find where your proof has value</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <aside class="rail">
+    <a class="brand" href="#top" aria-label="Norn home">
+      <span class="sigil" aria-hidden="true">ᚾ</span>
+      <span>NORN</span>
+    </a>
+    <nav>
+      <button class="nav active" data-view="feed"><span>01</span>Norn Feed</button>
+      <button class="nav" data-view="profile"><span>02</span>Norn Profile</button>
+      <button class="nav" data-view="score"><span>03</span>Norn Score</button>
+      <button class="nav" data-view="gaps"><span>04</span>Norn Gaps</button>
+      <button class="nav" data-view="pack"><span>05</span>Norn Pack</button>
+      <button class="nav" data-view="watch"><span>06</span>Norn Watch</button>
+    </nav>
+    <div class="rail-foot">
+      <div class="status-dot"></div>
+      <div><strong id="service-status">Checking service</strong><small id="payment-mode">—</small></div>
+    </div>
+  </aside>
+
+  <main id="top">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">VERIFIED CAPABILITY → OPPORTUNITY</p>
+        <h1>Find where your <em>proof</em> has value.</h1>
+      </div>
+      <button id="run-brief" class="primary">Run opportunity brief <span>↗</span></button>
+    </header>
+
+    <section class="metrics" aria-label="Norn summary">
+      <article><small>PROFILE READINESS</small><strong id="metric-readiness">—</strong><span>verified evidence coverage</span></article>
+      <article><small>OPEN FEED</small><strong id="metric-feed">—</strong><span>normalised opportunities</span></article>
+      <article><small>TOP NORN SCORE</small><strong id="metric-score">—</strong><span>explainable fit</span></article>
+      <article><small>WATCHED</small><strong id="metric-watch">—</strong><span>active follow-through</span></article>
+    </section>
+
+    <section id="view-feed" class="view active">
+      <div class="section-head">
+        <div><p class="eyebrow">NORN FEED</p><h2>A pipeline, not a pile of links.</h2></div>
+        <div class="filters"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="hackathon">Hackathons</button><button class="chip" data-filter="grant">Grants</button><button class="chip" data-filter="bounty">Bounties</button></div>
+      </div>
+      <div id="feed-list" class="feed-list skeleton"></div>
+    </section>
+
+    <section id="view-profile" class="view">
+      <div class="section-head"><div><p class="eyebrow">NORN PROFILE</p><h2>Claims separated from proof.</h2></div><button id="save-profile" class="secondary">Save profile</button></div>
+      <div class="profile-grid">
+        <article class="panel span-2">
+          <label>Display name<input id="profile-name" /></label>
+          <label>Biography<textarea id="profile-bio" rows="4"></textarea></label>
+          <label>Preferred opportunities<input id="profile-preferences" placeholder="grants, hackathons, paid integrations" /></label>
+        </article>
+        <article class="panel"><div class="panel-title"><span>Capabilities</span><small>status</small></div><div id="skills-list"></div></article>
+        <article class="panel"><div class="panel-title"><span>Projects</span><small>evidence</small></div><div id="projects-list"></div></article>
+        <article class="panel span-2"><div class="panel-title"><span>Evidence vault</span><small id="evidence-count">0 records</small></div><div id="evidence-list" class="evidence-list"></div></article>
+      </div>
+    </section>
+
+    <section id="view-score" class="view">
+      <div class="section-head"><div><p class="eyebrow">NORN SCORE</p><h2>Every number has a reason.</h2></div></div>
+      <div class="score-layout">
+        <article class="score-hero panel">
+          <div class="score-ring"><span id="score-value">—</span><small>/100</small></div>
+          <div><small id="score-opportunity">Select an opportunity</small><h3 id="score-recommendation">No assessment yet</h3><p id="score-summary">Choose a feed item to inspect its fit.</p></div>
+        </article>
+        <article class="panel criteria-panel"><div class="panel-title"><span>Score anatomy</span><small>weighted</small></div><div id="criteria-list"></div></article>
+      </div>
+    </section>
+
+    <section id="view-gaps" class="view">
+      <div class="section-head"><div><p class="eyebrow">NORN GAPS</p><h2>Know when you are close—but not ready.</h2></div></div>
+      <div class="panel"><div class="gap-legend"><span><i class="verified"></i>Verified</span><span><i class="partial"></i>Partial</span><span><i class="missing"></i>Missing</span></div><div id="gaps-list" class="gaps-list"></div></div>
+    </section>
+
+    <section id="view-pack" class="view">
+      <div class="section-head"><div><p class="eyebrow">NORN PACK</p><h2>Application material without invented claims.</h2></div><button id="generate-pack" class="primary">Generate draft</button></div>
+      <article class="pack-shell">
+        <div class="pack-meta"><span class="stamp">DRAFT · APPROVAL REQUIRED</span><small id="pack-digest">No pack generated</small></div>
+        <pre id="pack-content">Select an opportunity and generate its Norn Pack.</pre>
+      </article>
+    </section>
+
+    <section id="view-watch" class="view">
+      <div class="section-head"><div><p class="eyebrow">NORN WATCH</p><h2>Deadlines, evidence and follow-through.</h2></div></div>
+      <div id="watch-list" class="watch-list"></div>
+    </section>
+
+    <footer><span>NORN / 2026</span><span>Verified capability → managed opportunity</span><span>Human approval before submission</span></footer>
+  </main>
+
+  <div id="toast" role="status"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

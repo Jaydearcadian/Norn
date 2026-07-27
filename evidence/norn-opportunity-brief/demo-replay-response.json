@@ -1,0 +1,9 @@
+{
+  "status": 409,
+  "body": {
+    "detail": {
+      "error": "payment_replay",
+      "message": "This paid invocation has already executed."
+    }
+  }
+}

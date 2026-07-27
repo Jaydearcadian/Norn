@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "okx-ai-agent-service-lifecycle-v1",
+  "serviceSlug": "replace-me",
+  "serviceType": "A2MCP",
+  "status": "planned",
+  "provider": {
+    "agentId": null,
+    "serviceId": null,
+    "walletAddress": null
+  },
+  "public": {
+    "endpoint": null,
+    "deploymentPlatform": null,
+    "deploymentVersionId": null
+  },
+  "phases": {
+    "contract": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "implementation": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "localVerification": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "deployment": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "publicVerification": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "identityRegistration": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "activation": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "discovery": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "independentSelfTest": {"status":"pending","recordedAt":null,"evidence":[],"notes":""},
+    "monitoring": {"status":"pending","recordedAt":null,"evidence":[],"notes":""}
+  },
+  "evidence": [],
+  "limitations": [],
+  "rollback": {
+    "procedure": "",
+    "lastVerifiedAt": null
+  },
+  "createdAt": null,
+  "updatedAt": null
+}
