@@ -14,21 +14,18 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
+      - name: Runtime versions
+        run: |
+          python3 --version
+          node --version
       - id: install
         name: Install dependencies
         continue-on-error: true
-        run: python -m pip install -r requirements-dev.txt 2>&1 | tee ci-install.log
+        run: python3 -m pip install -r requirements-dev.txt 2>&1 | tee ci-install.log
       - id: compile
         name: Compile Python
         continue-on-error: true
-        run: python -m compileall -q app 2>&1 | tee ci-compile.log
+        run: python3 -m compileall -q app 2>&1 | tee ci-compile.log
       - id: javascript
         name: Validate dashboard JavaScript
         continue-on-error: true
@@ -36,15 +33,15 @@ jobs:
       - id: tests
         name: Run tests
         continue-on-error: true
-        run: python -m pytest --junitxml=pytest-junit.xml -vv 2>&1 | tee ci-tests.log
+        run: python3 -m pytest --junitxml=pytest-junit.xml -vv 2>&1 | tee ci-tests.log
       - id: lifecycle
         name: Verify lifecycle records and complete contracts
         continue-on-error: true
         run: |
           {
-            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
-            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
-            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json
+            python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
+            python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
+            python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json
           } 2>&1 | tee ci-lifecycle.log
       - name: Write stage outcomes
         if: always()
