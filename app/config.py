@@ -29,6 +29,7 @@ class Settings:
     public_base_url: str = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
     request_timeout_seconds: int = int(os.getenv("REQUEST_TIMEOUT_SECONDS", "30"))
     maximum_input_bytes: int = int(os.getenv("MAXIMUM_INPUT_BYTES", "262144"))
+    asp_listing_mode: str = os.getenv("ASP_LISTING_MODE", "free").lower()
     payment_mode: str = os.getenv("PAYMENT_MODE", "free").lower()
     payment_network: str = os.getenv("PAYMENT_NETWORK", X_LAYER_NETWORK)
     payment_price: str = os.getenv("PAYMENT_PRICE", DEFAULT_PRICE_USD)
@@ -53,6 +54,13 @@ class Settings:
             errors.append("PUBLIC_BASE_URL must use HTTPS in production")
         if any(not url.startswith("https://") for url in self.source_bundle_urls):
             errors.append("NORN_SOURCE_BUNDLE_URLS accepts HTTPS sources only")
+        if self.asp_listing_mode not in {"free", "paid"}:
+            errors.append("ASP_LISTING_MODE must be free or paid")
+        if self.environment == "production":
+            if self.asp_listing_mode == "free" and self.payment_mode != "free":
+                errors.append("PAYMENT_MODE must be free when ASP_LISTING_MODE=free")
+            if self.asp_listing_mode == "paid" and self.payment_mode != "okx":
+                errors.append("PAYMENT_MODE must be okx when ASP_LISTING_MODE=paid")
         if self.payment_mode == "okx":
             required = {
                 "PAY_TO_ADDRESS": self.pay_to_address, "OKX_API_KEY": self.okx_api_key,
@@ -75,10 +83,10 @@ class Settings:
         return errors
 
     def readiness_blockers(self) -> list[str]:
-        blockers = self.configuration_errors()
-        if self.environment == "production" and self.payment_mode != "okx":
-            blockers.append("PAYMENT_MODE=okx is required for paid production readiness")
-        return blockers
+        return self.configuration_errors()
+
+    def paid_settlement_ready(self) -> bool:
+        return self.asp_listing_mode == "paid" and self.payment_mode == "okx" and not self.configuration_errors()
 
     def validate_production(self) -> list[str]:
         return self.readiness_blockers()
