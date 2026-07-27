@@ -5,7 +5,7 @@ import re
 from datetime import date
 from typing import Iterable
 
-from .models import CapabilityProfile, Evidence, GapItem, Opportunity
+from .models import CapabilityProfile, Evidence, GapItem, Opportunity, OpportunityRequirement
 
 STOP = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "have",
@@ -54,53 +54,36 @@ def similarity(left: Iterable[str], right: Iterable[str]) -> float:
     a, b = set(left), set(right)
     if not a or not b:
         return 0.0
-    intersection = len(a & b)
-    return intersection / math.sqrt(len(a) * len(b))
+    return len(a & b) / math.sqrt(len(a) * len(b))
 
 
-def match_requirement(profile: CapabilityProfile, requirement: str) -> GapItem:
-    req = tokens(requirement)
+def match_requirement(profile: CapabilityProfile, requirement: OpportunityRequirement | str) -> GapItem:
+    if isinstance(requirement, str):
+        requirement = OpportunityRequirement(id="legacy", statement=requirement)
+    statement = requirement.statement
+    req = tokens(" ".join([statement, *requirement.acceptedEvidence]))
     verified_matches: list[str] = []
     claimed_matches: list[str] = []
-    for ev in profile.evidence:
-        if similarity(req, evidence_terms(ev)) >= 0.16 or req & evidence_terms(ev):
-            if ev.status.value == "verified":
-                verified_matches.append(ev.id)
-            elif ev.status.value == "claimed":
-                claimed_matches.append(ev.id)
+    for evidence in profile.evidence:
+        overlap = similarity(req, evidence_terms(evidence))
+        if overlap >= 0.16 or req & evidence_terms(evidence):
+            if evidence.status.value == "verified":
+                verified_matches.append(evidence.id)
+            elif evidence.status.value == "claimed":
+                claimed_matches.append(evidence.id)
 
     verified_capability_overlap = similarity(req, profile_terms(profile, verified_only=True))
     all_capability_overlap = similarity(req, profile_terms(profile, verified_only=False))
-
-    lowered = requirement.lower()
-    if any(marker in lowered for marker in ["optional", "nice to have", "preferred but not required"]):
-        return GapItem(
-            requirement=requirement, status="not_applicable", reason="The source describes this as optional.",
-        )
+    if not requirement.mandatory:
+        return GapItem(requirementId=requirement.id, requirement=statement, status="not_applicable", reason="The dossier marks this requirement optional.")
+    if requirement.confidence < 0.5 or requirement.interpretation.value in {"unknown", "conflicting"}:
+        return GapItem(requirementId=requirement.id, requirement=statement, status="unknown", reason="The opportunity requirement is not verified strongly enough for a hard eligibility decision.", recommendedAction="Review the attributed source and resolve the requirement interpretation.")
     if verified_matches or verified_capability_overlap >= 0.24:
-        return GapItem(
-            requirement=requirement,
-            status="verified",
-            matchedEvidenceIds=verified_matches,
-            reason="Verified capability or evidence overlaps this requirement.",
-        )
+        return GapItem(requirementId=requirement.id, requirement=statement, status="verified", matchedEvidenceIds=verified_matches, reason="Verified capability or evidence satisfies the structured requirement.")
     if claimed_matches or all_capability_overlap >= 0.16:
-        return GapItem(
-            requirement=requirement,
-            status="partial",
-            matchedEvidenceIds=claimed_matches,
-            reason="A relevant capability is claimed, but independently verifiable proof is incomplete.",
-            recommendedAction=f"Attach a public repository, deployment, test, transaction, demo, or document proving: {requirement}",
-        )
-    return GapItem(
-        requirement=requirement,
-        status="missing",
-        reason="No matching verified or claimed evidence was found.",
-        recommendedAction=f"Create or obtain evidence for: {requirement}",
-    )
+        return GapItem(requirementId=requirement.id, requirement=statement, status="partial", matchedEvidenceIds=claimed_matches, reason="Relevant capability exists, but accepted evidence is incomplete.", recommendedAction=f"Attach accepted evidence for: {statement}")
+    return GapItem(requirementId=requirement.id, requirement=statement, status="missing", reason="No matching verified or claimed evidence was found.", recommendedAction=f"Create or obtain accepted evidence for: {statement}")
 
 
 def deadline_days(opportunity: Opportunity) -> int | None:
-    if opportunity.deadline is None:
-        return None
-    return (opportunity.deadline - date.today()).days
+    return None if opportunity.deadline is None else (opportunity.deadline - date.today()).days
