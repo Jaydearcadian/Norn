@@ -16,6 +16,14 @@ class ClaimStatus(str, Enum):
     aspirational = "aspirational"
 
 
+class AttributionBasis(str, Enum):
+    explicit = "explicit"
+    derived = "derived"
+    inferred = "inferred"
+    unknown = "unknown"
+    conflicting = "conflicting"
+
+
 class Evidence(BaseModel):
     id: str
     label: str
@@ -73,11 +81,70 @@ class CapabilityProfile(BaseModel):
     updatedAt: datetime = Field(default_factory=utcnow)
 
 
+class SourceSnapshot(BaseModel):
+    id: str
+    sourceId: str
+    url: HttpUrl
+    sourceType: Literal["official", "aggregator", "manual", "fixture"] = "manual"
+    documentRole: Literal["announcement", "rules", "faq", "prizes", "application", "documentation", "repository", "issue", "issuer", "update", "other"] = "other"
+    retrievedAt: datetime = Field(default_factory=utcnow)
+    publishedAt: datetime | None = None
+    contentDigest: str
+    contentType: str
+    httpStatus: int = 200
+    issuer: str | None = None
+    title: str | None = None
+
+
+class FieldAttribution(BaseModel):
+    field: str
+    basis: AttributionBasis
+    confidence: float = Field(ge=0, le=1)
+    sourceSnapshotIds: list[str] = Field(default_factory=list)
+    excerptDigests: list[str] = Field(default_factory=list)
+    reasons: list[str] = Field(default_factory=list)
+
+
+class OpportunityRequirement(BaseModel):
+    id: str
+    category: Literal["eligibility", "technical", "deployment", "deliverable", "application", "legal", "evidence", "other"] = "other"
+    statement: str
+    mandatory: bool = True
+    appliesTo: list[str] = Field(default_factory=lambda: ["all"])
+    acceptedEvidence: list[str] = Field(default_factory=list)
+    dependencies: list[str] = Field(default_factory=list)
+    sourceSnapshotId: str | None = None
+    sourceExcerptDigest: str | None = None
+    confidence: float = Field(default=0.5, ge=0, le=1)
+    interpretation: AttributionBasis = AttributionBasis.unknown
+
+
 class OpportunityValue(BaseModel):
     minimum: float | None = None
     maximum: float | None = None
     currency: str = "USD"
+    kind: Literal["cash", "in_kind", "equity", "credits", "mixed", "unknown"] = "unknown"
+    schedule: str = ""
+    originalText: str = ""
     note: str = ""
+
+
+class OpportunityIntelligence(BaseModel):
+    programme: str | None = None
+    cycle: str | None = None
+    track: str | None = None
+    parentId: str | None = None
+    canonicalFingerprint: str | None = None
+    version: int = 1
+    dossierStatus: Literal["draft", "normalized", "verified", "stale", "closed", "withdrawn", "review_required"] = "draft"
+    completeness: float = Field(default=0, ge=0, le=1)
+    sourceQuality: float = Field(default=0, ge=0, le=1)
+    freshness: Literal["fresh", "aging", "stale", "unknown"] = "unknown"
+    independentlyActionable: bool = True
+    changeSummary: list[str] = Field(default_factory=list)
+    sourceSnapshotIds: list[str] = Field(default_factory=list)
+    fieldAttributions: list[FieldAttribution] = Field(default_factory=list)
+    reviewReasons: list[str] = Field(default_factory=list)
 
 
 class Opportunity(BaseModel):
@@ -88,16 +155,33 @@ class Opportunity(BaseModel):
     summary: str = ""
     value: OpportunityValue = Field(default_factory=OpportunityValue)
     deadline: date | None = None
-    requirements: list[str] = Field(default_factory=list)
+    requirements: list[OpportunityRequirement | str] = Field(default_factory=list)
     preferredCapabilities: list[str] = Field(default_factory=list)
     ecosystems: list[str] = Field(default_factory=list)
     sourceUrl: HttpUrl
     sourceTimestamp: datetime = Field(default_factory=utcnow)
     sourceType: Literal["official", "aggregator", "manual", "fixture"] = "manual"
+    applicationUrl: HttpUrl | None = None
     applicationEffort: Literal["low", "medium", "high"] = "medium"
     competitiveIntensity: Literal["low", "medium", "high", "unknown"] = "unknown"
     longTermValue: int = Field(default=50, ge=0, le=100)
     status: Literal["open", "closing", "closed", "unknown"] = "unknown"
+    intelligence: OpportunityIntelligence = Field(default_factory=OpportunityIntelligence)
+
+    @model_validator(mode="after")
+    def upgrade_legacy_requirements(self):
+        upgraded: list[OpportunityRequirement] = []
+        for index, item in enumerate(self.requirements):
+            if isinstance(item, OpportunityRequirement):
+                upgraded.append(item)
+            else:
+                optional = any(marker in item.lower() for marker in ("optional", "nice to have", "preferred but not required"))
+                upgraded.append(OpportunityRequirement(
+                    id=f"req_{index + 1}", statement=item, mandatory=not optional,
+                    confidence=0.5, interpretation=AttributionBasis.unknown,
+                ))
+        self.requirements = upgraded
+        return self
 
 
 class CriterionScore(BaseModel):
@@ -110,7 +194,8 @@ class CriterionScore(BaseModel):
 
 class GapItem(BaseModel):
     requirement: str
-    status: Literal["verified", "partial", "missing", "not_applicable"]
+    requirementId: str | None = None
+    status: Literal["verified", "partial", "missing", "not_applicable", "unknown", "failed"]
     matchedEvidenceIds: list[str] = Field(default_factory=list)
     reason: str
     recommendedAction: str | None = None
@@ -118,9 +203,13 @@ class GapItem(BaseModel):
 
 class FitAssessment(BaseModel):
     opportunityId: str
+    opportunityVersion: int = 1
+    profileVersion: str = "unversioned"
+    scoringEngineVersion: str = "norn-score-v1"
     score: int = Field(ge=0, le=100)
     expectedValueIndex: float = Field(ge=0)
     eligibility: Literal["eligible", "likely", "uncertain", "ineligible"]
+    hardEligibility: Literal["met", "failed", "unknown"] = "unknown"
     recommendation: Literal["pursue_now", "close_gaps_first", "watch", "skip"]
     criteria: list[CriterionScore]
     strongEvidence: list[str]
@@ -188,6 +277,7 @@ class Provenance(BaseModel):
     resultDigest: str
     sourceUrls: list[str]
     sourceTimestamps: list[datetime]
+    sourceSnapshotIds: list[str] = Field(default_factory=list)
     engineVersion: str = "norn-score-v1"
     generatedAt: datetime = Field(default_factory=utcnow)
 
@@ -208,6 +298,11 @@ class DiscoverRequest(BaseModel):
 
 class ImportOpportunityRequest(BaseModel):
     opportunities: list[Opportunity] = Field(min_length=1, max_length=500)
+
+
+class ReviewDecision(BaseModel):
+    status: Literal["approved", "rejected"]
+    note: str = ""
 
 
 class HealthResponse(BaseModel):
