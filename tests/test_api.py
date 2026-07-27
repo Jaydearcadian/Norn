@@ -83,3 +83,18 @@ def test_production_okx_mode_fails_closed_without_credentials(tmp_path: Path):
     )
     with pytest.raises(RuntimeError):
         create_app(settings)
+
+
+def test_free_production_deployment_is_not_payment_ready(tmp_path: Path):
+    settings = Settings(
+        environment="production",
+        data_dir=tmp_path / "data",
+        public_base_url="https://norn.example",
+        payment_mode="free",
+    )
+    client = TestClient(create_app(settings))
+    health = client.get("/health")
+    assert health.status_code == 200
+    assert health.json()["status"] == "degraded"
+    assert "PAYMENT_MODE=okx" in " ".join(health.json()["blockers"])
+    assert client.get("/ready").json()["ready"] is False

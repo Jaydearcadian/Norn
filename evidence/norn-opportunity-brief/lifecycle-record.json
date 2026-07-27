@@ -2,23 +2,23 @@
   "schemaVersion": "okx-ai-agent-service-lifecycle-v1",
   "serviceSlug": "norn-opportunity-brief",
   "serviceType": "A2MCP",
-  "status": "local_verified",
+  "status": "public_deployed",
   "provider": {
     "agentId": null,
     "serviceId": null,
     "walletAddress": null
   },
   "public": {
-    "endpoint": null,
-    "deploymentPlatform": null,
-    "deploymentVersionId": null
+    "endpoint": "https://norn.161.97.81.1.nip.io/api/v1/opportunity-brief",
+    "deploymentPlatform": "Ubuntu VPS, systemd, Nginx, Let's Encrypt",
+    "deploymentVersionId": "97aeba8"
   },
   "phases": {
     "contract": {
       "status": "blocked",
       "recordedAt": "2026-07-26T11:16:29.883128Z",
       "evidence": [],
-      "notes": "Business schema, price, authority and completion condition are defined. Freeze is blocked on the real HTTPS endpoint, current official settlement asset/atomic amount, and real X Layer recipient."
+      "notes": "Business schema, price, authority, completion condition, public HTTPS endpoint, X Layer network, official USDT0 asset, and atomic amount are defined. Freeze is blocked only on the real X Layer recipient."
     },
     "implementation": {
       "status": "passed",
@@ -35,9 +35,12 @@
         "app/static/index.html",
         "app/static/app.js",
         "app/static/styles.css",
-        "docs/architecture.md"
+        "docs/architecture.md",
+        "requirements.txt",
+        "tests/test_okx_integration.py",
+        ".github/workflows/ci.yml"
       ],
-      "notes": "Profile, Feed, Score, Gaps, Pack, Watch, HTTP ASP endpoint, local 402 harness, SDK integration hook, storage, dashboard, redaction and replay protection implemented."
+      "notes": "Profile, Feed, Score, Gaps, Pack, Watch, HTTP ASP endpoint, local 402 harness, official OKX Python SDK middleware, explicit X Layer USDT0 payment terms, storage, dashboard, redaction and replay protection implemented."
     },
     "localVerification": {
       "status": "passed",
@@ -47,21 +50,32 @@
         "evidence/norn-opportunity-brief/http-smoke.txt",
         "evidence/norn-opportunity-brief/demo-unpaid-challenge.json",
         "evidence/norn-opportunity-brief/sample-response.json",
-        "evidence/norn-opportunity-brief/demo-replay-response.json"
+        "evidence/norn-opportunity-brief/demo-replay-response.json",
+        "evidence/norn-opportunity-brief/tests/full-2026-07-27.txt",
+        "evidence/norn-opportunity-brief/tests/sdk-2026-07-27.txt"
       ],
-      "notes": "Ten pytest checks passed plus a real HTTP free-mode smoke test. JUnit and sanitised responses are stored in the evidence directory."
+      "notes": "The original ten pytest checks and real HTTP free-mode smoke test passed. The 2026-07-27 verification passes Python compilation, dashboard JavaScript syntax, all 16 tests, the installed OKX SDK import/construction check, dependency consistency, and lifecycle validation."
     },
     "deployment": {
-      "status": "pending",
-      "recordedAt": null,
-      "evidence": [],
-      "notes": ""
+      "status": "passed",
+      "recordedAt": "2026-07-27T08:20:37.730169Z",
+      "evidence": [
+        "evidence/norn-opportunity-brief/public/health.headers",
+        "evidence/norn-opportunity-brief/public/health.json",
+        "evidence/norn-opportunity-brief/public/ready.headers",
+        "evidence/norn-opportunity-brief/public/ready.json",
+        "evidence/norn-opportunity-brief/public/tls-certificate.txt"
+      ],
+      "notes": "Norn is publicly reachable through Nginx over valid HTTPS. Health and readiness checks returned HTTP 200."
     },
     "publicVerification": {
-      "status": "pending",
-      "recordedAt": null,
-      "evidence": [],
-      "notes": ""
+      "status": "in_progress",
+      "recordedAt": "2026-07-27T08:20:37.730169Z",
+      "evidence": [
+        "evidence/norn-opportunity-brief/public/free-call.headers",
+        "evidence/norn-opportunity-brief/public/free-call.json"
+      ],
+      "notes": "Public HTTPS free-mode service execution passed. Unpaid HTTP 402, settlement proof, replay handling and independent OKX consumer verification remain pending."
     },
     "identityRegistration": {
       "status": "pending",
@@ -202,11 +216,109 @@
       "path": "docs/architecture.md",
       "sha256": "a561edd5f75b6fa89f65edebef5f9b97138632ac1e9d08762cb803dd12ae3cef",
       "recordedAt": "2026-07-26T11:23:19.027121Z"
+    },
+    {
+      "kind": "deployment",
+      "path": "evidence/norn-opportunity-brief/public/health.headers",
+      "sha256": "64c37db5d92f0287e0e858259d9713d759f6c18c315111d4884cf9a8aefff062",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "deployment",
+      "path": "evidence/norn-opportunity-brief/public/health.json",
+      "sha256": "e26651048bed5e9b95b086e64fa748cddaa1f1c65ca035cbc1da667cfad5996d",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "deployment",
+      "path": "evidence/norn-opportunity-brief/public/ready.headers",
+      "sha256": "db8f93229787b23538c0d3b654d294c51d7a6fb98dd407ec9be56068045cb17f",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "deployment",
+      "path": "evidence/norn-opportunity-brief/public/ready.json",
+      "sha256": "0f12f33f32c68fa1200287f1dc23a20f5f6090a748bb3aaa97fb15b176b0df16",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "deployment",
+      "path": "evidence/norn-opportunity-brief/public/tls-certificate.txt",
+      "sha256": "c501ceae214250467dba31a3676674e4b60b42d04ae0cab1199ebe31531de9dd",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "public-test",
+      "path": "evidence/norn-opportunity-brief/public/free-call.headers",
+      "sha256": "bbd2e14d4e2362a85a32243c10fe65ee5e27280330d754982070fd4628f4a366",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "public-test",
+      "path": "evidence/norn-opportunity-brief/public/free-call.json",
+      "sha256": "d477843d38cc8634d9fa59fda65cc4ebc05a47421e54c4bc9168dd6465ac3fa1",
+      "recordedAt": "2026-07-27T08:20:37.730169Z"
+    },
+    {
+      "kind": "test-report",
+      "path": "evidence/norn-opportunity-brief/tests/full-2026-07-27.txt",
+      "sha256": "7784b1d4770700a86187f6e604027542ac36de101206e35647997da4a7462eba",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "PATH=\"$PWD/.venv/bin:$PATH\" make check",
+      "redacted": true
+    },
+    {
+      "kind": "test-report",
+      "path": "evidence/norn-opportunity-brief/tests/sdk-2026-07-27.txt",
+      "sha256": "9612b2aa9225af437e30940c089898bfec8d514905ba0ba36a4f6c9ba376fa59",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "installed SDK import, construction, terms, and pip consistency checks",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": "app/payment.py",
+      "sha256": "f5a44184a653ec7ce1c8d2b8a2d4b7712b8d66f01c4e594f09d392766e1d0fc1",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "official OKX Python SDK integration repair",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": "app/config.py",
+      "sha256": "9c08f1359d663991fbcc190d7db2a0d1e8182f90da8f2f34765127d145ed88fa",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "production configuration and readiness hardening",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": "app/main.py",
+      "sha256": "9517f1c45059ad73ffe9895f4b21037f16d1f681fc9453e617d0a2f29d86c1b7",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "health, readiness, and payment header CORS hardening",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": "requirements.txt",
+      "sha256": "32b7850ae150b7573ce112ddace6aa7d064a94a72709e79a52192fa43f9f3e31",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "pinned OKX SDK with EVM dependencies",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e3331d5bc185ee3350d58e6d90cc4f8b3a6e7665374645f74fbfd53339e703c0",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "repository CI workflow",
+      "redacted": true
     }
   ],
   "limitations": [
-    "No public HTTPS deployment exists in this record yet.",
-    "Production OKX x402 verification requires current SDK installation and real facilitator credentials.",
+    "Public HTTPS is deployed, but production OKX x402 payment conformance and independent consumer proof remain pending.",
+    "Production OKX x402 verification requires a real X Layer recipient and facilitator credentials.",
     "ASP identity, service ID, activation, discovery and independent consumer proof are pending external actions.",
     "The bundled ZK grant is a labelled demonstration fixture and must not be treated as a live opportunity."
   ],
@@ -215,5 +327,5 @@
     "lastVerifiedAt": null
   },
   "createdAt": "2026-07-26T11:16:29.295132Z",
-  "updatedAt": "2026-07-26T11:23:19.027121Z"
+  "updatedAt": "2026-07-27T11:40:27Z"
 }

@@ -1,0 +1,5 @@
+subject=CN = norn.161.97.81.1.nip.io
+issuer=C = US, O = Let's Encrypt, CN = YE1
+notBefore=Jul 27 07:16:49 2026 GMT
+notAfter=Oct 25 07:16:48 2026 GMT
+sha256 Fingerprint=98:BF:B5:5E:AD:27:25:E6:67:40:0F:61:48:20:BC:EE:D2:1F:C4:3E:D4:B6:DD:76:90:00:42:C4:E0:60:9F:27

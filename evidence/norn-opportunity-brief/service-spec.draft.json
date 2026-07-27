@@ -18,63 +18,27 @@
   "inputs": {
     "schema": {
       "type": "object",
-      "required": [
-        "profile",
-        "opportunities"
-      ],
+      "required": ["profile", "opportunities"],
       "properties": {
-        "profile": {
-          "type": "object"
-        },
-        "opportunities": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 25
-        },
-        "includePackForTopOpportunity": {
-          "type": "boolean"
-        },
-        "maximumResults": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 10
-        }
+        "profile": {"type": "object"},
+        "opportunities": {"type": "array", "minItems": 1, "maxItems": 25},
+        "includePackForTopOpportunity": {"type": "boolean"},
+        "maximumResults": {"type": "integer", "minimum": 1, "maximum": 10}
       }
     },
-    "examples": [
-      "evidence/norn-opportunity-brief/sample-request.json"
-    ]
+    "examples": ["evidence/norn-opportunity-brief/sample-request.json"]
   },
   "outputs": {
     "schema": {
       "type": "object",
-      "required": [
-        "ranked",
-        "summary",
-        "provenance"
-      ],
+      "required": ["ranked", "summary", "provenance"],
       "properties": {
-        "ranked": {
-          "type": "array"
-        },
-        "topPack": {
-          "type": [
-            "object",
-            "null"
-          ]
-        },
-        "summary": {
-          "type": "string"
-        },
+        "ranked": {"type": "array"},
+        "topPack": {"type": ["object", "null"]},
+        "summary": {"type": "string"},
         "provenance": {
           "type": "object",
-          "required": [
-            "requestDigest",
-            "resultDigest",
-            "sourceUrls",
-            "sourceTimestamps",
-            "engineVersion"
-          ]
+          "required": ["requestDigest", "resultDigest", "sourceUrls", "sourceTimestamps", "engineVersion"]
         }
       }
     },
@@ -87,26 +51,11 @@
     ]
   },
   "errors": [
-    {
-      "code": "invalid_input",
-      "http": 422
-    },
-    {
-      "code": "payment_required",
-      "http": 402
-    },
-    {
-      "code": "payment_replay",
-      "http": 409
-    },
-    {
-      "code": "request_too_large",
-      "http": 413
-    },
-    {
-      "code": "upstream_unavailable",
-      "http": 503
-    }
+    {"code": "invalid_input", "http": 422},
+    {"code": "payment_required", "http": 402},
+    {"code": "payment_replay", "http": 409},
+    {"code": "request_too_large", "http": 413},
+    {"code": "upstream_unavailable", "http": 503}
   ],
   "limits": {
     "timeoutMs": 30000,
@@ -116,23 +65,18 @@
   "pricing": {
     "listingFeeUsdt": "0.01",
     "paymentNetwork": "eip155:196",
-    "paymentAsset": "",
-    "atomicAmount": "",
+    "paymentAsset": "0x779ded0c9e1022225f8e0630b35a9b54be713736",
+    "atomicAmount": "10000",
     "recipient": "",
     "refundFailurePolicy": "No business result is generated when payment verification fails. Settled-call failure handling follows the official SDK and recorded incident policy."
   },
   "a2mcp": {
-    "endpoint": "",
+    "endpoint": "https://norn.161.97.81.1.nip.io/api/v1/opportunity-brief",
     "protocol": "http-json",
     "method": "POST",
     "toolName": "norn_opportunity_brief",
-    "freeMethods": [
-      "GET /health",
-      "GET /ready"
-    ],
-    "paymentRequiredFor": [
-      "POST /api/v1/opportunity-brief"
-    ]
+    "freeMethods": ["GET /health", "GET /ready"],
+    "paymentRequiredFor": ["POST /api/v1/opportunity-brief"]
   },
   "a2a": {
     "taskCategories": [],
@@ -148,14 +92,7 @@
     "humanApprovalRequired": true
   },
   "provenance": {
-    "requiredFields": [
-      "requestDigest",
-      "resultDigest",
-      "sourceUrls",
-      "sourceTimestamps",
-      "engineVersion",
-      "generatedAt"
-    ],
+    "requiredFields": ["requestDigest", "resultDigest", "sourceUrls", "sourceTimestamps", "engineVersion", "generatedAt"],
     "sourcePolicy": "Every opportunity must include a source URL and timestamp. Fixture sources must be labelled and excluded from real submissions."
   },
   "safety": {

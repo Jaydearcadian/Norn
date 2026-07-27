@@ -2,5 +2,5 @@ fastapi==0.128.2
 uvicorn[standard]==0.48.0
 pydantic==2.13.4
 httpx==0.28.1
-# Official OKX x402 seller middleware used when PAYMENT_MODE=okx.
-okxweb3-app-x402
+# Official OKX x402 seller middleware plus the required EVM mechanism dependencies.
+okxweb3-app-x402[evm]==0.1.1

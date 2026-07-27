@@ -1,0 +1,11 @@
+Recorded at: 2026-07-27T11:40:27Z
+Checks:
+  okxweb3-app-x402=0.1.1
+  official documented Python imports=ok
+  payment middleware construction test=passed
+  network=eip155:196
+  asset=0x779ded0c9e1022225f8e0630b35a9b54be713736
+  atomicAmount=10000
+  pip check=No broken requirements found.
+
+The construction test uses non-production placeholder credentials and performs no facilitator request or settlement.

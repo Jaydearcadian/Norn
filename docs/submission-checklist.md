@@ -8,10 +8,11 @@
 - [x] Deterministic evidence and approval boundaries implemented.
 - [x] Local test suite passing.
 - [x] Docker and hosted-platform definitions included.
+- [x] Public HTTPS free-mode deployment verified.
+- [x] Official X Layer USDT0, atomic amount, and Python SDK integration pinned and tested.
 - [ ] Add verified project evidence to Norn Profile.
-- [ ] Install and verify the current OKX x402 SDK package.
 - [ ] Configure the real X Layer recipient and facilitator credentials.
-- [ ] Deploy to a stable HTTPS origin.
+- [ ] Redeploy the verified commit with `PAYMENT_MODE=okx`.
 - [ ] Pass unpaid and paid public conformance checks.
 
 ## OKX.AI
@@ -33,7 +34,8 @@
 
 ## Truth check
 
-- [ ] No placeholder endpoint, wallet, service ID or agent ID remains.
+- [x] The A2MCP endpoint is a verified public HTTPS URL.
+- [ ] Real wallet, service ID and agent ID are recorded from actual outputs.
 - [ ] No reusable secret appears in source, logs, evidence or video.
 - [ ] No claimed or aspirational capability is presented as verified.
 - [ ] Registration, activation and discoverability are not described as successful before receipts exist.

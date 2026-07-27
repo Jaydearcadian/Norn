@@ -13,13 +13,15 @@ NORN_DATA_DIR=/data
 PAYMENT_MODE=okx
 PAYMENT_NETWORK=eip155:196
 PAYMENT_PRICE=$0.01
+PAYMENT_ASSET=0x779ded0c9e1022225f8e0630b35a9b54be713736
+PAYMENT_ATOMIC_AMOUNT=10000
 PAY_TO_ADDRESS=<real X Layer recipient>
 OKX_API_KEY=<secret>
 OKX_SECRET_KEY=<secret>
 OKX_PASSPHRASE=<secret>
 ```
 
-Install the current OKX payment SDK in the image before switching to `PAYMENT_MODE=okx`. The repository leaves it commented in `requirements.txt` because the build environment used to create this package had no package-registry access; verify the current package version from OKX documentation rather than pinning an unverified release.
+The image installs the pinned OKX Python payment SDK with its required EVM dependencies from `requirements.txt`. Re-check the current official Python SDK guide before a later version upgrade.
 
 ## Preflight
 
@@ -46,6 +48,8 @@ Expected unpaid result:
 - network `eip155:196`;
 - exact intended price and recipient;
 - no opportunity scoring execution in the audit log.
+
+`PAYMENT_MODE=free` is acceptable only for public inspection before credentials are available. In production it intentionally reports degraded health and `ready: false`, and it must not be registered as the paid marketplace service.
 
 After explicit payment approval, replay the exact request through an OKX User agent. Expected paid result:
 

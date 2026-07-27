@@ -13,3 +13,5 @@ check:
 lifecycle:
 	python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
 	-python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-brief/service-spec.draft.json
+	python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
+	python3 skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json

@@ -11,18 +11,47 @@
 **serviceName:** Norn Opportunity Brief
 
 **serviceDescription:** Evaluates an evidence-backed capability profile against up to 25 normalised opportunities and returns an explainable ranked brief with Norn Scores, eligibility, evidence gaps, preparation actions, provenance digests and an optional draft Norn Pack for the top match.
-1. Capability profile with explicit claim status and evidence 2. One or more opportunities with source URL, timestamp and requirements 3. Maximum results and pack preference
+
+**requiredInputs:** 1. Capability profile with explicit claim status and evidence 2. One or more opportunities with source URL, timestamp and requirements 3. Maximum results and pack preference
 
 **serviceType:** A2MCP
 
-**fee:** 0.01
+**fee:** 0.01 USDT0 per call
 
-**endpoint:** `https://<real-public-host>/api/v1/opportunity-brief`
+**network:** X Layer `eip155:196`
 
-The endpoint and recipient must be replaced with verified public values before registration. Do not submit the placeholders above.
+**asset:** `0x779ded0c9e1022225f8e0630b35a9b54be713736`
+
+**atomicAmount:** `10000`
+
+**endpoint:** `https://norn.161.97.81.1.nip.io/api/v1/opportunity-brief`
+
+The recipient wallet must be supplied through the production secret manager before registration. The listing is not payment-ready until the live endpoint returns HTTP 402 with `PAYMENT-REQUIRED` and a separately controlled OKX User agent completes a paid replay.
+
+## A2A service
+
+**serviceName:** Norn Opportunity Strategy
+
+**serviceDescription:** Negotiates and delivers a custom opportunity portfolio, evidence remediation plan, execution roadmap, milestone schedule and approval-gated application package for technical builders and teams.
+
+**serviceType:** A2A
+
+**taskCategories:** custom opportunity strategy; funding and partnership pipeline design; evidence remediation planning; multi-opportunity application portfolio
+
+**pricing:** negotiated per project after discovery; quote depends on scope, evidence complexity, urgency, opportunity count and revision load
+
+**delivery:** written scope, ranked portfolio, gap-remediation plan, milestones, provenance index and draft application material
+
+**revisionPolicy:** one consolidated revision round unless the accepted scope states otherwise; material expansion requires a new quote
+
+**cancellationPolicy:** follow the accepted scope and the cancellation states exposed by the live OKX.AI A2A task runtime; preserve completed milestone evidence and never invent an off-platform refund
+
+**disputePolicy:** preserve scope, milestone evidence, delivery digests, timestamps and buyer feedback, then use the OKX.AI A2A marketplace arbitration path exposed for the task. The current guide states that an ASP may initiate arbitration within one day and may need to bond 5% of the task reward; confirm the live task terms before accepting work.
+
+The A2A service must not advertise an HTTP endpoint. Marketplace task escrow must not be represented as the separate general Agent Payments escrow product.
 
 ## Category
 
 Primary target: **Software Utility**.
 
-Secondary narrative: Norn is also a decision copilot for technical funding and commercial opportunities, but the listing should remain one coherent software-utility service.
+Secondary narrative: Norn is also a decision copilot for technical funding and commercial opportunities, but each listing must remain one coherent service: deterministic A2MCP Opportunity Brief or negotiated A2A Opportunity Strategy.

@@ -1,0 +1,14 @@
+Recorded at: 2026-07-27T11:40:27Z
+Command:
+  PATH="$PWD/.venv/bin:$PATH" make check
+
+Output:
+  python3 -m compileall -q app
+  node --check app/static/app.js
+  python3 -m pytest
+  ................                                                         [100%]
+  16 passed, 1 warning in 0.43s
+
+Warning:
+  The installed web3 dependency imports websockets.legacy, which emits a deprecation warning.
+  No Norn test failed.
