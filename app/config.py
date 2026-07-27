@@ -18,7 +18,7 @@ class Settings:
     request_timeout_seconds: int = int(os.getenv("REQUEST_TIMEOUT_SECONDS", "30"))
     maximum_input_bytes: int = int(os.getenv("MAXIMUM_INPUT_BYTES", "262144"))
     payment_mode: str = os.getenv("PAYMENT_MODE", "free").lower()
-    payment_network: str = os.getenv("PAYMENT_NETWORK", "eip155:1952")
+    payment_network: str = os.getenv("PAYMENT_NETWORK", "eip155:196")
     payment_price: str = os.getenv("PAYMENT_PRICE", "$0.01")
     payment_asset: str = os.getenv("PAYMENT_ASSET", "")
     payment_atomic_amount: str = os.getenv("PAYMENT_ATOMIC_AMOUNT", "")
