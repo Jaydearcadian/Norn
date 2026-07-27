@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 set -euo pipefail
-pytest
+python3 -m pytest
