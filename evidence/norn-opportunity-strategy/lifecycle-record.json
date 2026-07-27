@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "okx-ai-agent-service-lifecycle-v1",
+  "serviceSlug": "norn-opportunity-strategy",
+  "serviceType": "A2A",
+  "status": "implemented",
+  "provider": {
+    "agentId": null,
+    "serviceId": null,
+    "walletAddress": null
+  },
+  "public": {
+    "endpoint": null,
+    "deploymentPlatform": null,
+    "deploymentVersionId": null
+  },
+  "phases": {
+    "contract": {
+      "status": "passed",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "evidence": [
+        "evidence/norn-opportunity-strategy/service-spec.draft.json"
+      ],
+      "notes": "The A2A scope, negotiation, pricing, delivery, revision, cancellation, arbitration, authority, and provenance boundaries are defined and the service specification validates."
+    },
+    "implementation": {
+      "status": "passed",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "evidence": [
+        "skills/norn-opportunity-strategy/SKILL.md"
+      ],
+      "notes": "The runnable delivery skill and separate A2A service package are implemented without advertising an HTTP endpoint."
+    },
+    "localVerification": {
+      "status": "in_progress",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "evidence": [
+        "tests/test_okx_integration.py"
+      ],
+      "notes": "Contract separation tests pass. The official 10–20 scenario simulation, negotiation rehearsal, refusal testing, and manual delivery-quality review remain pending."
+    },
+    "deployment": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": "A2A uses the OKX task runtime rather than an HTTP endpoint."
+    },
+    "publicVerification": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "identityRegistration": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "activation": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "discovery": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "independentSelfTest": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    },
+    "monitoring": {
+      "status": "pending",
+      "recordedAt": null,
+      "evidence": [],
+      "notes": ""
+    }
+  },
+  "evidence": [
+    {
+      "kind": "contract",
+      "path": "evidence/norn-opportunity-strategy/service-spec.draft.json",
+      "sha256": "b9204ece14bb818067affa735f5d7067c14c1488e8c8b488ffb7604a28490afe",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "lifecycle_record.py validate-spec",
+      "redacted": true
+    },
+    {
+      "kind": "implementation",
+      "path": "skills/norn-opportunity-strategy/SKILL.md",
+      "sha256": "11f3b254c82c9bbc8cdb9042cba848946f052bd1aff636c8a3a92cfaafa5d591",
+      "recordedAt": "2026-07-27T11:40:27Z",
+      "source": "repository implementation",
+      "redacted": true
+    }
+  ],
+  "limitations": [
+    "Scenario training and manual delivery-quality review are incomplete.",
+    "OKX A2A communication readiness has not been run.",
+    "ASP registration, activation, marketplace discovery, a real negotiated task, delivery acceptance, and terminal-state proof are pending."
+  ],
+  "rollback": {
+    "procedure": "Deactivate the exact A2A service listing, stop accepting new tasks, preserve task chronology and artifact digests, then re-run readiness and an independent task lifecycle before reactivation.",
+    "lastVerifiedAt": null
+  },
+  "createdAt": "2026-07-27T11:40:27Z",
+  "updatedAt": "2026-07-27T11:40:27Z"
+}

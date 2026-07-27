@@ -46,7 +46,7 @@ Reject or re-scope requests that require fabricated credentials, automatic appli
 
 ## Pricing strategy
 
-Pricing is negotiated per project after discovery. Quote according to scope, number of opportunities, evidence complexity, urgency, and revision load. Do not expose a universal fixed price or claim escrow availability unless the selected OKX payment flow supports it at execution time.
+Pricing is negotiated per project after discovery. Quote according to scope, number of opportunities, evidence complexity, urgency, and revision load. State the exact marketplace task escrow, acceptance, and arbitration terms shown by the live OKX.AI task runtime. Do not represent the separate general Agent Payments escrow product as active or interchangeable.
 
 ## Delivery package
 
@@ -74,11 +74,11 @@ One consolidated revision round is included unless the negotiated scope states o
 
 ## Cancellation policy
 
-Before work begins, cancellation closes the task without delivery. After work begins, completed milestones remain payable according to the negotiated agreement. Never promise automated refunds or escrow behaviour that is not active in the selected payment implementation.
+Before work begins, cancellation closes the task without delivery. After work begins, follow the accepted agreement and the cancellation states exposed by the live OKX.AI task runtime. Preserve completed milestone evidence and never promise an off-platform refund or a settlement path the task runtime does not expose.
 
 ## Dispute policy
 
-Preserve the agreed scope, milestone evidence, delivery digests, timestamps, and buyer feedback. Escalate disputes through the payment or marketplace mechanism actually available for the engagement. Do not represent OKX escrow as live while official documentation labels it unavailable or forthcoming.
+Preserve the agreed scope, milestone evidence, delivery digests, timestamps, and buyer feedback. Escalate through the OKX.AI A2A marketplace arbitration path shown for the task. The current ASP guide states that the ASP may initiate arbitration within one day and may need to bond 5% of the task reward; confirm the live terms before acceptance. Do not conflate this task-marketplace mechanism with the separate general Agent Payments escrow product.
 
 ## Terminal states
 

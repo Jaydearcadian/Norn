@@ -44,11 +44,11 @@ The recipient wallet must be supplied through the production secret manager befo
 
 **revisionPolicy:** one consolidated revision round unless the accepted scope states otherwise; material expansion requires a new quote
 
-**cancellationPolicy:** before work begins the task may be cancelled without delivery; after work begins completed milestones remain payable under the accepted agreement
+**cancellationPolicy:** follow the accepted scope and the cancellation states exposed by the live OKX.AI A2A task runtime; preserve completed milestone evidence and never invent an off-platform refund
 
-**disputePolicy:** preserve scope, milestone evidence, delivery digests, timestamps and buyer feedback, then use the payment or marketplace mechanism actually available
+**disputePolicy:** preserve scope, milestone evidence, delivery digests, timestamps and buyer feedback, then use the OKX.AI A2A marketplace arbitration path exposed for the task. The current guide states that an ASP may initiate arbitration within one day and may need to bond 5% of the task reward; confirm the live task terms before accepting work.
 
-The A2A service must not advertise an HTTP endpoint or claim escrow support unless the selected OKX payment surface supports it at execution time.
+The A2A service must not advertise an HTTP endpoint. Marketplace task escrow must not be represented as the separate general Agent Payments escrow product.
 
 ## Category
 

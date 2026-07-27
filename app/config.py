@@ -3,12 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import os
+import re
 
 
 X_LAYER_NETWORK = "eip155:196"
 X_LAYER_USDT0 = "0x779ded0c9e1022225f8e0630b35a9b54be713736"
 DEFAULT_PRICE_USD = "$0.01"
 DEFAULT_ATOMIC_AMOUNT = "10000"
+EVM_ADDRESS_PATTERN = re.compile(r"^0x[0-9a-fA-F]{40}$")
 
 
 def _bool(name: str, default: bool = False) -> bool:
@@ -44,7 +46,7 @@ class Settings:
     enable_live_discovery: bool = _bool("ENABLE_LIVE_DISCOVERY", False)
     demo_payment_secret: str = os.getenv("DEMO_PAYMENT_SECRET", "local-test-only")
 
-    def validate_production(self) -> list[str]:
+    def configuration_errors(self) -> list[str]:
         errors: list[str] = []
         if self.environment == "production" and not self.public_base_url.startswith("https://"):
             errors.append("PUBLIC_BASE_URL must use HTTPS in production")
@@ -58,6 +60,8 @@ class Settings:
                 "PAYMENT_ATOMIC_AMOUNT": self.payment_atomic_amount,
             }
             errors.extend(f"{name} is required for PAYMENT_MODE=okx" for name, value in required.items() if not value)
+            if self.pay_to_address and not EVM_ADDRESS_PATTERN.fullmatch(self.pay_to_address):
+                errors.append("PAY_TO_ADDRESS must be a 20-byte 0x-prefixed EVM address")
             if self.payment_network != X_LAYER_NETWORK:
                 errors.append(f"PAYMENT_NETWORK must be {X_LAYER_NETWORK} for the OKX.AI X Layer listing")
             if self.payment_asset.lower() != X_LAYER_USDT0:
@@ -69,6 +73,16 @@ class Settings:
         if self.payment_mode not in {"free", "demo", "okx"}:
             errors.append("PAYMENT_MODE must be free, demo, or okx")
         return errors
+
+    def readiness_blockers(self) -> list[str]:
+        blockers = self.configuration_errors()
+        if self.environment == "production" and self.payment_mode != "okx":
+            blockers.append("PAYMENT_MODE=okx is required for paid production readiness")
+        return blockers
+
+    def validate_production(self) -> list[str]:
+        """Backward-compatible readiness check used by health and lifecycle tooling."""
+        return self.readiness_blockers()
 
 
 settings = Settings()

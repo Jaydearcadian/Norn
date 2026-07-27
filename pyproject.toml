@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-okx = ["okxweb3-app-x402"]
+okx = ["okxweb3-app-x402[evm]==0.1.1"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -28,9 +28,9 @@ from .store import JsonStore
 
 
 def create_app(settings: Settings = default_settings) -> FastAPI:
-    blockers = settings.validate_production()
-    if blockers and settings.environment == "production":
-        raise RuntimeError("; ".join(blockers))
+    configuration_errors = settings.configuration_errors()
+    if configuration_errors and settings.environment == "production":
+        raise RuntimeError("; ".join(configuration_errors))
 
     app = FastAPI(
         title="Norn",
@@ -42,14 +42,15 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
     app.state.discovery = DiscoveryEngine(settings, app.state.store)
     app.state.demo_payment = DemoPaymentGateway(settings, app.state.store)
 
+    configure_okx_payment_middleware(app, settings)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"] if settings.environment != "production" else [settings.public_base_url],
         allow_credentials=False,
         allow_methods=["GET", "POST", "PUT", "PATCH"],
         allow_headers=["Content-Type", "PAYMENT-SIGNATURE", "X-PAYMENT"],
+        expose_headers=["PAYMENT-REQUIRED", "PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"],
     )
-    configure_okx_payment_middleware(app, settings)
 
     @app.exception_handler(PaymentRequired)
     async def payment_required_handler(_request: Request, exc: PaymentRequired):
@@ -61,7 +62,7 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
 
     @app.get("/health", response_model=HealthResponse)
     async def health() -> HealthResponse:
-        current_blockers = settings.validate_production()
+        current_blockers = settings.readiness_blockers()
         return HealthResponse(
             status="degraded" if current_blockers else "ok",
             service="norn",
@@ -72,7 +73,8 @@ def create_app(settings: Settings = default_settings) -> FastAPI:
 
     @app.get("/ready")
     async def ready():
-        return {"ready": not settings.validate_production(), "blockers": settings.validate_production()}
+        blockers = settings.readiness_blockers()
+        return {"ready": not blockers, "blockers": blockers}
 
     @app.get("/api/profile", response_model=CapabilityProfile)
     async def get_profile():

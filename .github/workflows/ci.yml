@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Verify application
+        run: make check
+      - name: Verify lifecycle records and complete contracts
+        run: |
+          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
+          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
+          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json

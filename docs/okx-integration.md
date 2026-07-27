@@ -1,6 +1,13 @@
 # OKX.AI integration map
 
-This document maps Norn to the current official OKX.AI A2MCP, Agent Payments Protocol, A2A, and seller SDK guides.
+This document maps Norn to the current official OKX.AI A2MCP, Agent Payments Protocol, A2A, and Python seller SDK guides as checked on 2026-07-27.
+
+Authoritative references:
+
+- <https://web3.okx.com/zh-hans/onchainos/dev-docs/okxai/howtomcp>
+- <https://web3.okx.com/zh-hans/onchainos/dev-docs/okxai/how-to-become-a2a>
+- <https://web3.okx.com/zh-hans/onchainos/dev-docs/okxai/registerasp>
+- <https://web3.okx.com/onchainos/dev-docs/payments/sdk-python>
 
 ## A2MCP: Norn Opportunity Brief
 
@@ -16,7 +23,7 @@ Norn Opportunity Brief is the deterministic service:
 - recipient: supplied through `PAY_TO_ADDRESS` and never committed;
 - payment middleware: `okxweb3-app-x402` with the official facilitator client and exact EVM scheme.
 
-In `PAYMENT_MODE=okx`, the middleware must return HTTP 402 and `PAYMENT-REQUIRED` for an unpaid request, verify the replayed payment, and allow the business handler to execute once. `PAYMENT_MODE=free` is only for exploration and deployment checks. `PAYMENT_MODE=demo` is a local conformance harness and is forbidden in production.
+In `PAYMENT_MODE=okx`, the middleware must return HTTP 402 and `PAYMENT-REQUIRED` for an unpaid request, verify the replayed payment, and allow the business handler to execute once. `PAYMENT_MODE=free` is only for exploration and deployment checks and reports not-ready in production. `PAYMENT_MODE=demo` is a local conformance harness and is forbidden in production.
 
 ## Agent Payments Protocol
 
@@ -27,7 +34,12 @@ Norn uses the protocol in two different deployment shapes:
 
 Norn does not implement its own broker or claim persistent commercial payment state. Facilitator or broker responsibilities remain with the selected OKX payment infrastructure.
 
-Escrow must not be advertised as live unless the official payment surface used for the engagement supports it. The A2A contract therefore records cancellation and dispute procedures without promising unavailable escrow behaviour.
+Two distinct escrow surfaces must not be conflated:
+
+- The current OKX.AI A2A marketplace guide describes task funds held until buyer acceptance, plus an ASP arbitration path that may require a 5% task-reward bond.
+- The general Agent Payments Protocol navigation separately labels its generic escrow-payment method as coming soon.
+
+Norn may describe the A2A marketplace task escrow and arbitration rules only when the actual OKX.AI task runtime exposes them for the engagement. It must not claim that the general Agent Payments escrow API is available or interchangeable.
 
 ## A2A: Norn Opportunity Strategy
 
@@ -77,4 +89,4 @@ Before registering A2A:
 2. manually review delivery quality;
 3. verify all tools and data sources declared by the skill are callable;
 4. set the real provider identity, listing details, and negotiated price policy in OKX.AI;
-5. never claim escrow support until it is active for the chosen payment method.
+5. verify the exact marketplace task escrow, acceptance, cancellation, and arbitration fields returned by the live runtime instead of inferring them from the generic payments product.

@@ -15,9 +15,9 @@ It is built as an OKX.AI Agent Service Provider candidate with six connected pro
 
 ## Current status
 
-`LOCAL_VERIFIED`
+`PUBLIC_DEPLOYED`
 
-The application, scoring engine, evidence-gap engine, pack generator, dashboard, local 402 harness, replay protection, redaction and deployment definitions are implemented and tested. Public deployment, production x402 settlement, OKX ASP registration, marketplace activation and independent consumer proof require external credentials and cannot truthfully be marked complete yet.
+The application, scoring engine, evidence-gap engine, pack generator, dashboard, local 402 harness, replay protection, redaction and deployment definitions are implemented and tested. A public HTTPS free-mode deployment is verified. Production x402 settlement, OKX ASP registration, marketplace activation and independent consumer proof require external credentials and cannot truthfully be marked complete yet.
 
 ## Run
 
@@ -55,11 +55,13 @@ The default `PAYMENT_MODE=free` makes local exploration easy. `PAYMENT_MODE=demo
 
 For production:
 
-1. Install the current OKX Python payment package documented by OKX.
+1. Install the pinned dependencies from `requirements.txt`, including `okxweb3-app-x402[evm]==0.1.1`.
 2. Set `PAYMENT_MODE=okx`.
 3. Provide `PAY_TO_ADDRESS`, `OKX_API_KEY`, `OKX_SECRET_KEY` and `OKX_PASSPHRASE` through the hosting platform's secret manager.
 4. Set `PAYMENT_NETWORK=eip155:196` and `PUBLIC_BASE_URL` to the real HTTPS origin.
 5. Run the public conformance and independent consumer tests in `docs/deployment.md`.
+
+A production deployment left in `PAYMENT_MODE=free` remains reachable for inspection but reports degraded health and `ready: false`; it is not payment-ready.
 
 The protected endpoint is:
 

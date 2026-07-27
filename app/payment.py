@@ -85,13 +85,20 @@ def configure_okx_payment_middleware(app, settings: Settings) -> None:
     if settings.payment_mode != "okx":
         return
     try:
-        from x402.http import OKXAuthConfig, OKXFacilitatorClient, OKXFacilitatorConfig, PaymentOption
+        from x402.http import (
+            OKXAuthConfig,
+            OKXFacilitatorClient,
+            OKXFacilitatorConfig,
+            PaymentOption,
+            RouteConfig,
+        )
         from x402.http.middleware.fastapi import PaymentMiddlewareASGI
-        from x402.http.types import RouteConfig
         from x402.mechanisms.evm.exact.server import ExactEvmScheme
         from x402.server import x402ResourceServer
     except ImportError as exc:
-        raise RuntimeError("Install okxweb3-app-x402 before PAYMENT_MODE=okx") from exc
+        raise RuntimeError(
+            "Install okxweb3-app-x402 with its EVM dependencies before PAYMENT_MODE=okx"
+        ) from exc
 
     facilitator = OKXFacilitatorClient(
         OKXFacilitatorConfig(
@@ -106,15 +113,21 @@ def configure_okx_payment_middleware(app, settings: Settings) -> None:
     )
     server = x402ResourceServer(facilitator)
     server.register(settings.payment_network, ExactEvmScheme())
+    endpoint = f"{settings.public_base_url.rstrip('/')}/api/v1/opportunity-brief"
     routes = {
         "POST /api/v1/opportunity-brief": RouteConfig(
             accepts=[PaymentOption(
                 scheme="exact",
-                price=settings.payment_price,
+                price={
+                    "amount": settings.payment_atomic_amount,
+                    "asset": settings.payment_asset,
+                    "extra": {"name": "USD₮0", "version": "1"},
+                },
                 network=settings.payment_network,
                 pay_to=settings.pay_to_address,
                 max_timeout_seconds=settings.payment_max_timeout_seconds,
             )],
+            resource=endpoint,
             description="Norn evidence-backed opportunity ranking and readiness brief",
             mime_type="application/json",
         )

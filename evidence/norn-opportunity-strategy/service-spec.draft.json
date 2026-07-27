@@ -57,12 +57,12 @@
     "ratePolicy": "Negotiated project engagement; no pay-per-call endpoint."
   },
   "pricing": {
-    "listingFeeUsdt": "0",
+    "listingFeeUsdt": null,
     "paymentNetwork": "eip155:196",
     "paymentAsset": "0x779ded0c9e1022225f8e0630b35a9b54be713736",
     "atomicAmount": "",
     "recipient": "",
-    "refundFailurePolicy": "Payment, cancellation, and dispute handling follow the negotiated agreement and the payment method actually available at execution time."
+    "refundFailurePolicy": "Payment, cancellation, acceptance, and dispute handling follow the accepted agreement and the exact OKX.AI A2A marketplace task states available at execution time. No off-platform refund is promised."
   },
   "a2mcp": {
     "endpoint": "",
@@ -80,6 +80,9 @@
       "multi-opportunity application portfolio"
     ],
     "negotiatedPricing": true,
+    "taskMarketplaceEscrow": "Use the OKX.AI A2A marketplace task escrow and buyer-acceptance flow only when the live task runtime exposes it for the engagement.",
+    "generalPaymentsEscrow": "Not claimed. The separate general Agent Payments escrow product must not be represented as interchangeable with A2A marketplace task escrow.",
+    "arbitrationPolicy": "Use the live OKX.AI A2A arbitration terms. The current guide says an ASP may initiate arbitration within one day and may need to bond 5% of the task reward; confirm the runtime terms before accepting work.",
     "milestones": [
       "discovery and evidence intake",
       "scope and quote approval",
@@ -89,8 +92,8 @@
       "final approval-gated package"
     ],
     "revisionPolicy": "One consolidated revision round is included unless the accepted scope states otherwise; material scope expansion requires a new quote.",
-    "cancellationPolicy": "Before work begins the task may be cancelled without delivery; after work begins completed milestones remain payable under the accepted agreement.",
-    "disputePolicy": "Preserve the accepted scope, milestone evidence, delivery digests, timestamps, and buyer feedback, then use the payment or marketplace dispute mechanism actually available for the engagement."
+    "cancellationPolicy": "Before work begins the task may be cancelled without delivery. After work begins, follow the accepted agreement and the cancellation states exposed by the live OKX.AI A2A task runtime; preserve completed milestone evidence.",
+    "disputePolicy": "Preserve the accepted scope, milestone evidence, delivery digests, timestamps, and buyer feedback, then use the OKX.AI A2A marketplace arbitration path exposed for the task."
   },
   "authority": {
     "runtimeSignsForUser": false,
@@ -106,7 +109,7 @@
       "Automatic application submission",
       "Fabricating experience, deployments, customers, revenue, audits, partnerships, or on-chain proof",
       "Custody, signing, or broadcasting for the buyer",
-      "Representing unavailable escrow functionality as active"
+      "Representing general Agent Payments escrow as interchangeable with OKX.AI A2A marketplace task escrow"
     ],
     "regulatedConstraints": [
       "Respect source terms and authorised connector scopes",
