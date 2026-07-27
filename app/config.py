@@ -5,7 +5,6 @@ from pathlib import Path
 import os
 import re
 
-
 X_LAYER_NETWORK = "eip155:196"
 X_LAYER_USDT0 = "0x779ded0c9e1022225f8e0630b35a9b54be713736"
 DEFAULT_PRICE_USD = "$0.01"
@@ -15,6 +14,11 @@ EVM_ADDRESS_PATTERN = re.compile(r"^0x[0-9a-fA-F]{40}$")
 
 def _bool(name: str, default: bool = False) -> bool:
     return os.getenv(name, str(default)).lower() in {"1", "true", "yes", "on"}
+
+
+def _csv(name: str, fallback: str = "") -> tuple[str, ...]:
+    raw = os.getenv(name, fallback)
+    return tuple(item.strip() for item in raw.split(",") if item.strip())
 
 
 @dataclass(frozen=True)
@@ -37,12 +41,9 @@ class Settings:
     okx_passphrase: str = os.getenv("OKX_PASSPHRASE", "")
     okx_base_url: str = os.getenv("OKX_BASE_URL", "https://web3.okx.com")
     github_token: str = os.getenv("GITHUB_TOKEN", "")
-    github_queries: tuple[str, ...] = tuple(
-        item.strip() for item in os.getenv("NORN_GITHUB_QUERIES", "").split(";;") if item.strip()
-    )
-    source_feed_urls: tuple[str, ...] = tuple(
-        item.strip() for item in os.getenv("NORN_SOURCE_FEED_URLS", "").split(",") if item.strip()
-    )
+    github_queries: tuple[str, ...] = tuple(item.strip() for item in os.getenv("NORN_GITHUB_QUERIES", "").split(";;") if item.strip())
+    source_bundle_urls: tuple[str, ...] = _csv("NORN_SOURCE_BUNDLE_URLS", os.getenv("NORN_SOURCE_FEED_URLS", ""))
+    source_feed_urls: tuple[str, ...] = source_bundle_urls
     enable_live_discovery: bool = _bool("ENABLE_LIVE_DISCOVERY", False)
     demo_payment_secret: str = os.getenv("DEMO_PAYMENT_SECRET", "local-test-only")
 
@@ -50,14 +51,13 @@ class Settings:
         errors: list[str] = []
         if self.environment == "production" and not self.public_base_url.startswith("https://"):
             errors.append("PUBLIC_BASE_URL must use HTTPS in production")
+        if any(not url.startswith("https://") for url in self.source_bundle_urls):
+            errors.append("NORN_SOURCE_BUNDLE_URLS accepts HTTPS sources only")
         if self.payment_mode == "okx":
             required = {
-                "PAY_TO_ADDRESS": self.pay_to_address,
-                "OKX_API_KEY": self.okx_api_key,
-                "OKX_SECRET_KEY": self.okx_secret_key,
-                "OKX_PASSPHRASE": self.okx_passphrase,
-                "PAYMENT_ASSET": self.payment_asset,
-                "PAYMENT_ATOMIC_AMOUNT": self.payment_atomic_amount,
+                "PAY_TO_ADDRESS": self.pay_to_address, "OKX_API_KEY": self.okx_api_key,
+                "OKX_SECRET_KEY": self.okx_secret_key, "OKX_PASSPHRASE": self.okx_passphrase,
+                "PAYMENT_ASSET": self.payment_asset, "PAYMENT_ATOMIC_AMOUNT": self.payment_atomic_amount,
             }
             errors.extend(f"{name} is required for PAYMENT_MODE=okx" for name, value in required.items() if not value)
             if self.pay_to_address and not EVM_ADDRESS_PATTERN.fullmatch(self.pay_to_address):
@@ -81,7 +81,6 @@ class Settings:
         return blockers
 
     def validate_production(self) -> list[str]:
-        """Backward-compatible readiness check used by health and lifecycle tooling."""
         return self.readiness_blockers()
 
 

@@ -5,7 +5,7 @@ import re
 from datetime import date
 from typing import Iterable
 
-from .models import CapabilityProfile, Evidence, GapItem, Opportunity
+from .models import CapabilityProfile, Evidence, GapItem, Opportunity, OpportunityRequirement
 
 STOP = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "have",
@@ -54,50 +54,34 @@ def similarity(left: Iterable[str], right: Iterable[str]) -> float:
     a, b = set(left), set(right)
     if not a or not b:
         return 0.0
-    intersection = len(a & b)
-    return intersection / math.sqrt(len(a) * len(b))
+    return len(a & b) / math.sqrt(len(a) * len(b))
 
 
-def match_requirement(profile: CapabilityProfile, requirement: str) -> GapItem:
-    req = tokens(requirement)
+def match_requirement(profile: CapabilityProfile, requirement: OpportunityRequirement | str) -> GapItem:
+    requirement = requirement if isinstance(requirement, OpportunityRequirement) else OpportunityRequirement.from_text(requirement)
+    statement = requirement.statement
+    req = tokens(" ".join([statement, requirement.category, *requirement.acceptedEvidence]))
     verified_matches: list[str] = []
     claimed_matches: list[str] = []
-    for ev in profile.evidence:
-        if similarity(req, evidence_terms(ev)) >= 0.16 or req & evidence_terms(ev):
-            if ev.status.value == "verified":
-                verified_matches.append(ev.id)
-            elif ev.status.value == "claimed":
-                claimed_matches.append(ev.id)
+    for evidence in profile.evidence:
+        overlap = similarity(req, evidence_terms(evidence))
+        if overlap >= 0.16 or req & evidence_terms(evidence):
+            if evidence.status.value == "verified":
+                verified_matches.append(evidence.id)
+            elif evidence.status.value == "claimed":
+                claimed_matches.append(evidence.id)
 
     verified_capability_overlap = similarity(req, profile_terms(profile, verified_only=True))
     all_capability_overlap = similarity(req, profile_terms(profile, verified_only=False))
+    base = dict(requirement=statement, requirementId=requirement.id, category=requirement.category, mandatory=requirement.mandatory)
 
-    lowered = requirement.lower()
-    if any(marker in lowered for marker in ["optional", "nice to have", "preferred but not required"]):
-        return GapItem(
-            requirement=requirement, status="not_applicable", reason="The source describes this as optional.",
-        )
+    if not requirement.mandatory:
+        return GapItem(**base, status="not_applicable", eligibilityResult="not_applicable", reason="The issuer describes this requirement as optional.")
     if verified_matches or verified_capability_overlap >= 0.24:
-        return GapItem(
-            requirement=requirement,
-            status="verified",
-            matchedEvidenceIds=verified_matches,
-            reason="Verified capability or evidence overlaps this requirement.",
-        )
+        return GapItem(**base, status="verified", eligibilityResult="met" if requirement.category in {"eligibility", "geography", "team", "legal"} else None, matchedEvidenceIds=verified_matches, reason="Verified capability or evidence satisfies this structured requirement.")
     if claimed_matches or all_capability_overlap >= 0.16:
-        return GapItem(
-            requirement=requirement,
-            status="partial",
-            matchedEvidenceIds=claimed_matches,
-            reason="A relevant capability is claimed, but independently verifiable proof is incomplete.",
-            recommendedAction=f"Attach a public repository, deployment, test, transaction, demo, or document proving: {requirement}",
-        )
-    return GapItem(
-        requirement=requirement,
-        status="missing",
-        reason="No matching verified or claimed evidence was found.",
-        recommendedAction=f"Create or obtain evidence for: {requirement}",
-    )
+        return GapItem(**base, status="partial", eligibilityResult="unknown" if requirement.category in {"eligibility", "geography", "team", "legal"} else None, matchedEvidenceIds=claimed_matches, reason="Relevant capability exists, but independently verifiable proof is incomplete.", recommendedAction=f"Attach accepted evidence proving: {statement}")
+    return GapItem(**base, status="missing", eligibilityResult="unknown" if requirement.category in {"eligibility", "geography", "team", "legal"} else None, reason="No matching verified or claimed evidence was found.", recommendedAction=f"Create or obtain evidence for: {statement}")
 
 
 def deadline_days(opportunity: Opportunity) -> int | None:
