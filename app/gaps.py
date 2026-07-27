@@ -5,4 +5,5 @@ from .models import CapabilityProfile, GapItem, Opportunity
 
 
 def identify_gaps(profile: CapabilityProfile, opportunity: Opportunity) -> list[GapItem]:
-    return [match_requirement(profile, requirement) for requirement in opportunity.requirements]
+    requirements = [*opportunity.eligibility, *opportunity.requirements, *opportunity.deliverables]
+    return [match_requirement(profile, requirement) for requirement in requirements]
