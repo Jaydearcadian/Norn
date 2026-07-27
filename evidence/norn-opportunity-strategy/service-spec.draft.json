@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "okx-ai-service-spec-v1",
+  "serviceSlug": "norn-opportunity-strategy",
+  "serviceType": "A2A",
+  "name": "Norn Opportunity Strategy",
+  "agentDescription": "Norn negotiates and delivers custom, evidence-backed opportunity strategies for technical builders and teams.",
+  "serviceDescription": {
+    "capability": "Create a tailored opportunity portfolio, evidence remediation plan, execution roadmap, and approval-gated application package through multi-round scope negotiation.",
+    "requiredInputs": [
+      "Target opportunity classes and ecosystems",
+      "Capability profile and evidence links",
+      "Deadline, desired deliverables, and review stakeholders"
+    ]
+  },
+  "customer": "Technical developers, teams, and projects that need a custom funding, partnership, bounty, hackathon, or RFP execution strategy.",
+  "outcome": "A negotiated, custom strategy package with ranked targets, evidence gaps, milestones, provenance, and draft materials that remain subject to human approval.",
+  "fulfillmentMode": "negotiated",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "required": ["objectives", "profile", "deadline"],
+      "properties": {
+        "objectives": {"type": "array", "minItems": 1},
+        "profile": {"type": "object"},
+        "deadline": {"type": "string"},
+        "preferredDeliverables": {"type": "array"},
+        "constraints": {"type": "array"}
+      }
+    }
+  },
+  "outputs": {
+    "schema": {
+      "type": "object",
+      "required": ["scope", "deliverables", "milestones", "provenance"],
+      "properties": {
+        "scope": {"type": "object"},
+        "deliverables": {"type": "array"},
+        "milestones": {"type": "array"},
+        "provenance": {"type": "object"}
+      }
+    },
+    "acceptanceCriteria": [
+      "The agreed scope and exclusions are explicit",
+      "Every material claim is linked to evidence or marked unverified",
+      "Milestones and revision allowance are stated before acceptance",
+      "All application materials remain drafts until human approval"
+    ]
+  },
+  "errors": [
+    {"code": "scope_outside_capability", "http": 422},
+    {"code": "buyer_input_required", "http": 409},
+    {"code": "task_cancelled", "http": 410}
+  ],
+  "limits": {
+    "timeoutMs": 0,
+    "maximumInputBytes": 262144,
+    "ratePolicy": "Negotiated project engagement; no pay-per-call endpoint."
+  },
+  "pricing": {
+    "listingFeeUsdt": "0",
+    "paymentNetwork": "eip155:196",
+    "paymentAsset": "0x779ded0c9e1022225f8e0630b35a9b54be713736",
+    "atomicAmount": "",
+    "recipient": "",
+    "refundFailurePolicy": "Payment, cancellation, and dispute handling follow the negotiated agreement and the payment method actually available at execution time."
+  },
+  "a2mcp": {
+    "endpoint": "",
+    "protocol": "",
+    "method": "",
+    "toolName": "",
+    "freeMethods": [],
+    "paymentRequiredFor": []
+  },
+  "a2a": {
+    "taskCategories": [
+      "custom opportunity strategy",
+      "funding and partnership pipeline design",
+      "evidence remediation planning",
+      "multi-opportunity application portfolio"
+    ],
+    "negotiatedPricing": true,
+    "milestones": [
+      "discovery and evidence intake",
+      "scope and quote approval",
+      "portfolio and gap analysis",
+      "draft delivery",
+      "consolidated revision",
+      "final approval-gated package"
+    ],
+    "revisionPolicy": "One consolidated revision round is included unless the accepted scope states otherwise; material scope expansion requires a new quote.",
+    "cancellationPolicy": "Before work begins the task may be cancelled without delivery; after work begins completed milestones remain payable under the accepted agreement.",
+    "disputePolicy": "Preserve the accepted scope, milestone evidence, delivery digests, timestamps, and buyer feedback, then use the payment or marketplace dispute mechanism actually available for the engagement."
+  },
+  "authority": {
+    "runtimeSignsForUser": false,
+    "runtimeBroadcastsForUser": false,
+    "humanApprovalRequired": true
+  },
+  "provenance": {
+    "requiredFields": ["sourceUrls", "sourceTimestamps", "deliverableDigest", "generatedAt"],
+    "sourcePolicy": "Every recommended opportunity and every material capability claim must be linked to a source or explicitly marked unverified."
+  },
+  "safety": {
+    "excludedActions": [
+      "Automatic application submission",
+      "Fabricating experience, deployments, customers, revenue, audits, partnerships, or on-chain proof",
+      "Custody, signing, or broadcasting for the buyer",
+      "Representing unavailable escrow functionality as active"
+    ],
+    "regulatedConstraints": [
+      "Respect source terms and authorised connector scopes",
+      "Human review is mandatory before any submission"
+    ],
+    "sensitiveDataPolicy": "Never retain or echo reusable authorisation, payment signatures, private keys, or facilitator credentials."
+  },
+  "version": "0.1.0"
+}
