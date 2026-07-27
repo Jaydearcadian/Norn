@@ -21,23 +21,56 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-      - name: Install dependencies
-        run: python -m pip install -r requirements-dev.txt
-      - name: Compile Python
-        run: python -m compileall -q app
-      - name: Validate dashboard JavaScript
-        run: node --check app/static/app.js
-      - name: Run tests
-        run: python -m pytest --junitxml=pytest-junit.xml -vv
-      - name: Upload test report
+      - id: install
+        name: Install dependencies
+        continue-on-error: true
+        run: python -m pip install -r requirements-dev.txt 2>&1 | tee ci-install.log
+      - id: compile
+        name: Compile Python
+        continue-on-error: true
+        run: python -m compileall -q app 2>&1 | tee ci-compile.log
+      - id: javascript
+        name: Validate dashboard JavaScript
+        continue-on-error: true
+        run: node --check app/static/app.js 2>&1 | tee ci-javascript.log
+      - id: tests
+        name: Run tests
+        continue-on-error: true
+        run: python -m pytest --junitxml=pytest-junit.xml -vv 2>&1 | tee ci-tests.log
+      - id: lifecycle
+        name: Verify lifecycle records and complete contracts
+        continue-on-error: true
+        run: |
+          {
+            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
+            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
+            python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json
+          } 2>&1 | tee ci-lifecycle.log
+      - name: Write stage outcomes
+        if: always()
+        run: |
+          cat > ci-outcomes.txt <<EOF
+          install=${{ steps.install.outcome }}
+          compile=${{ steps.compile.outcome }}
+          javascript=${{ steps.javascript.outcome }}
+          tests=${{ steps.tests.outcome }}
+          lifecycle=${{ steps.lifecycle.outcome }}
+          EOF
+      - name: Upload CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-junit
-          path: pytest-junit.xml
-          if-no-files-found: ignore
-      - name: Verify lifecycle records and complete contracts
+          name: ci-diagnostics
+          path: |
+            ci-*.log
+            ci-outcomes.txt
+            pytest-junit.xml
+          if-no-files-found: warn
+      - name: Enforce successful stages
+        if: always()
         run: |
-          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-brief/lifecycle-record.json
-          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate evidence/norn-opportunity-strategy/lifecycle-record.json
-          python skills/okx-ai-agent-service-lifecycle/scripts/lifecycle_record.py validate-spec evidence/norn-opportunity-strategy/service-spec.draft.json
+          test "${{ steps.install.outcome }}" = success
+          test "${{ steps.compile.outcome }}" = success
+          test "${{ steps.javascript.outcome }}" = success
+          test "${{ steps.tests.outcome }}" = success
+          test "${{ steps.lifecycle.outcome }}" = success
